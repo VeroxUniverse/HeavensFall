@@ -1,0 +1,6 @@
+{
+  "parent": "heavensfall:item/generated_large",
+  "textures": {
+    "layer0": "heavensfall:item/holy_greatsword"
+  }
+}
