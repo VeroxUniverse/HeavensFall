@@ -100,6 +100,14 @@ dependencies {
 
     runtimeOnly "curse.maven:jade-324717:5884231"
 
+    // Caelus
+    runtimeOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}"
+    compileOnly "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}:api"
+
+    // Curios
+    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+
     // Better Combat
     runtimeOnly "maven.modrinth:better-combat:2.0.2+1.21.1-neoforge"
     runtimeOnly "curse.maven:cloth-config-348521:5623420"
