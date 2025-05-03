@@ -1,16 +1,9 @@
 package net.pixeldream.heavensfall.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.rewrite.model.AzBakedModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.SlotContext;
@@ -39,16 +32,7 @@ public class WingsCurioRenderer implements ICurioRenderer {
 
         matrixStack.pushPose();
 
-        matrixStack.translate(0, 0.5, 0.25);
-
-        wingsRenderer.prepForRender(entity, stack, EquipmentSlot.CHEST, (HumanoidModel<?>) renderLayerParent.getModel());
-
-        AzBakedModel model = wingsRenderer.provider().provideBakedModel(stack);
-        ResourceLocation textureLocation = WingsItemRenderer.TEX;
-        RenderType renderType = RenderType.entityCutout(textureLocation);
-        VertexConsumer buffer = renderTypeBuffer.getBuffer(renderType);
-
-        wingsRenderer.rendererPipeline().render(matrixStack, model, stack, renderTypeBuffer, renderType, buffer, netHeadYaw, partialTicks, light);
+        wingsRenderer.renderByItem(stack, matrixStack, renderTypeBuffer, light);
 
         matrixStack.popPose();
 

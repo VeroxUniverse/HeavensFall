@@ -1,6 +1,7 @@
 package net.pixeldream.heavensfall;
 
 import com.mojang.logging.LogUtils;
+import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.rewrite.animation.cache.AzIdentityRegistry;
 import mod.azure.azurelib.rewrite.render.armor.AzArmorRendererRegistry;
 import mod.azure.azurelib.rewrite.render.item.AzItemRendererRegistry;
@@ -27,27 +28,29 @@ import net.pixeldream.heavensfall.items.HFItems;
 import org.slf4j.Logger;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
-@Mod(Heavensfall.MODID)
-public class Heavensfall {
+@Mod(HeavensFallMod.MODID)
+public class HeavensFallMod {
 
     public static final String MODID = "heavensfall";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public Heavensfall(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(this::commonSetup);
-
+    public HeavensFallMod(IEventBus modEventBus, ModContainer modContainer) {
+        AzureLib.initialize();
         HFItems.register(modEventBus);
         HFCreativeTab.register(modEventBus);
-
         NeoForge.EVENT_BUS.register(this);
-
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modEventBus.addListener(this::commonSetup);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
+    public void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
         AzIdentityRegistry.register(
-                HFItems.ANGEL_WINGS.get()
+                HFItems.ANGEL_WINGS.get(),
+                HFItems.ARCLIGHT_HELMET.get(),
+                HFItems.ARCLIGHT_CHESPLATE.get(),
+                HFItems.ARCLIGHT_LEGGINGS.get(),
+                HFItems.ARCLIGHT_BOOTS.get()
         );
     }
 
@@ -61,9 +64,6 @@ public class Heavensfall {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             LOGGER.info("HELLO FROM CLIENT SETUP");
-
-            AzArmorRendererRegistry.register(WingsItemRenderer::new, HFItems.ANGEL_WINGS.get());
-            CuriosRendererRegistry.register(HFItems.ANGEL_WINGS.get(), WingsCurioRenderer::new);
 
         }
     }

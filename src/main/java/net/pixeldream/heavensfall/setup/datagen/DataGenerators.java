@@ -7,12 +7,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.pixeldream.heavensfall.Heavensfall;
-import net.pixeldream.heavensfall.setup.datagen.provider.HFItemModelProvider;
+import net.pixeldream.heavensfall.HeavensFallMod;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = Heavensfall.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = HeavensFallMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
 
     @SubscribeEvent

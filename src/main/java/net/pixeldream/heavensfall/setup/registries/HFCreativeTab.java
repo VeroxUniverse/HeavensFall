@@ -5,14 +5,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.pixeldream.heavensfall.Heavensfall;
+import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.items.HFItems;
 
 public class HFCreativeTab {
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Heavensfall.MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, HeavensFallMod.MODID);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_ITEMS = CREATIVE_MODE_TABS.register("hf_tab_items", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.items." + Heavensfall.MODID))
+            .title(Component.translatable("itemGroup.items." + HeavensFallMod.MODID))
             .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
 

@@ -2,12 +2,12 @@ package net.pixeldream.heavensfall.setup.datagen.provider;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.pixeldream.heavensfall.Heavensfall;
+import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.items.HFItems;
 
 public class HFItemModelProvider extends ItemModelProvider {
     public HFItemModelProvider(PackOutput output, net.neoforged.neoforge.common.data.ExistingFileHelper existingFileHelper) {
-        super(output, Heavensfall.MODID, existingFileHelper);
+        super(output, HeavensFallMod.MODID, existingFileHelper);
     }
 
     @Override

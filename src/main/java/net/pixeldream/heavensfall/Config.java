@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 // --- Config maybe for Mobs --- VeroxUniverse //
 
-@EventBusSubscriber(modid = Heavensfall.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = HeavensFallMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
