@@ -8,19 +8,18 @@ import net.pixeldream.heavensfall.HeavensFallMod;
 public class WingsItemRenderer extends AzArmorRenderer {
     private static final ResourceLocation GEO = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "geo/wings/angel_wings.geo.json"
+            "geo/armor/angel_wings.geo.json"
     );
 
     public static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "textures/models/wings/angel_wings.png"
+            "textures/armor/angel_wings.png"
     );
 
     public WingsItemRenderer() {
         super(
                 AzItemRendererConfig.builder(GEO, TEX)
                         .setAnimatorProvider(WingsItemAnimator::new)
-                        .useNewOffset(true)
                         .build()
         );
     }

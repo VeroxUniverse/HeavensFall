@@ -12,10 +12,6 @@
 			},
 			"bones": [
 				{
-					"name": "bb_main",
-					"pivot": [0, 0, 0]
-				},
-				{
 					"name": "bipedHead",
 					"pivot": [0, 24, 0]
 				},

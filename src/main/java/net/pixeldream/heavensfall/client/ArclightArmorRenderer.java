@@ -13,14 +13,11 @@ public class ArclightArmorRenderer extends AzArmorRenderer {
 
     public static final ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "textures/models/armors/arclight_paladin_armor.png"
+            "textures/armors/arclight_paladin_armor.png"
     );
 
     public ArclightArmorRenderer() {
         super(
-                AzItemRendererConfig.builder(GEO, TEX)
-                        .setAnimatorProvider(ArmorAnimator::new)
-                        .build()
-        );
+                AzItemRendererConfig.builder(GEO, TEX).build());
     }
 }
