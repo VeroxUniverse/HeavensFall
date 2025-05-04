@@ -3,30 +3,29 @@ package net.pixeldream.heavensfall.items;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Equipable;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-public class AnimatedWingsItem extends Item implements Equipable,ICurioItem {
+public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
 
     public final WingsItemDispatcher dispatcher;
 
-    public AnimatedWingsItem(Item.Properties properties) {
-        super(new Properties()
+    public AnimatedWingsItem(Holder<ArmorMaterial> material, Type type, Properties properties) {
+        super(ArmorMaterials.NETHERITE, type,
+                new Properties()
                         .stacksTo(1)
                         .durability(1024));
         this.dispatcher = new WingsItemDispatcher();
     }
-
-/*
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> swapWithEquipmentSlot(
@@ -45,8 +44,6 @@ public class AnimatedWingsItem extends Item implements Equipable,ICurioItem {
 
         return result;
     }
-
- */
 
     @Override
     public EquipmentSlot getEquipmentSlot() {

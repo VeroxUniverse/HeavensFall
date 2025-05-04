@@ -11,12 +11,34 @@ import net.pixeldream.heavensfall.items.HFItems;
 public class HFCreativeTab {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, HeavensFallMod.MODID);
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_ITEMS = CREATIVE_MODE_TABS.register("hf_tab_items", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.items." + HeavensFallMod.MODID))
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_RESOURCE = CREATIVE_MODE_TABS.register("hf_tab_resource", () -> CreativeModeTab.builder()
+            .title(Component.translatable(HeavensFallMod.MODID + ".itemGroup.resources"))
             .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
 
-                HFItems.ITEMS.getEntries().forEach(item -> {
+                HFItems.ITEMS_RESOURCES.getEntries().forEach(item -> {
+                    output.accept(item.get());
+
+                });
+            }).build());
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_AMRORY = CREATIVE_MODE_TABS.register("hf_tab_armory", () -> CreativeModeTab.builder()
+            .title(Component.translatable(HeavensFallMod.MODID + ".itemGroup.armory"))
+            .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
+            .displayItems((parameters, output) -> {
+
+                HFItems.ITEMS_ARMORY.getEntries().forEach(item -> {
+                    output.accept(item.get());
+
+                });
+            }).build());
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_BLOCKS = CREATIVE_MODE_TABS.register("hf_tab_blocks", () -> CreativeModeTab.builder()
+            .title(Component.translatable(HeavensFallMod.MODID + ".itemGroup.blocks"))
+            .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
+            .displayItems((parameters, output) -> {
+
+                HFItems.ITEMS_BLOCKS.getEntries().forEach(item -> {
                     output.accept(item.get());
 
                 });
