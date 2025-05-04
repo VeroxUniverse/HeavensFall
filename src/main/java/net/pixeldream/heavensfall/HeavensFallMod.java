@@ -33,7 +33,7 @@ public class HeavensFallMod {
     public void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
         AzIdentityRegistry.register(
-//                HFItems.ANGEL_WINGS.get(),
+                HFItems.ANGEL_WINGS.get(),
                 HFItems.ARCLIGHT_HELMET.get(),
                 HFItems.ARCLIGHT_CHESPLATE.get(),
                 HFItems.ARCLIGHT_LEGGINGS.get(),

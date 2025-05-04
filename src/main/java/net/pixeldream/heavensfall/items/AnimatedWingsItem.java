@@ -19,11 +19,8 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
 
     public final WingsItemDispatcher dispatcher;
 
-    public AnimatedWingsItem(Holder<ArmorMaterial> material, Type type, Properties properties) {
-        super(ArmorMaterials.NETHERITE, type,
-                new Properties()
-                        .stacksTo(1)
-                        .durability(1024));
+    public AnimatedWingsItem(Type type, Properties properties) {
+        super(ArmorMaterials.DIAMOND, type, properties);
         this.dispatcher = new WingsItemDispatcher();
     }
 
@@ -72,46 +69,46 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
         }
         return true;
     }
-//
-//    @Override
-//    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-//        if (!level.isClientSide && entity instanceof Player player) {
-//            player.getArmorSlots().forEach(wornArmor -> {
-//                if (wornArmor != null && wornArmor.is(HFItems.ANGEL_WINGS)) {
-//                    if (player.isFallFlying()) {
-//                        if (player.getRandom().nextBoolean()) {
-//                            dispatcher.glideWings(player, stack);
-//                        } else {
-//                            dispatcher.flyWings(player, stack);
-//                        }
-//                    } else if (player.onGround()) {
-//                        dispatcher.closeWings(entity, stack);
-//                    } else {
-//                        dispatcher.openWings(entity, stack);
-//                    }
-//                }
-//            });
-//        }
-//    }
-//
-//    @Override
-//    public void curioTick(SlotContext slotContext, ItemStack stack) {
-//        LivingEntity entity = slotContext.entity();
-//        if (entity instanceof Player player && !player.level().isClientSide) {
-//            if (stack.is(HFItems.ANGEL_WINGS)) {
-//                if (player.isFallFlying()) {
-//                    if (player.getRandom().nextBoolean()) {
-//                        dispatcher.glideWings(player, stack);
-//                    } else {
-//                        dispatcher.flyWings(player, stack);
-//                    }
-//                } else if (player.onGround()) {
-//                    dispatcher.closeWings(player, stack);
-//                } else {
-//                    dispatcher.openWings(player, stack);
-//                }
-//            }
-//        }
-//    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (!level.isClientSide && entity instanceof Player player) {
+            player.getArmorSlots().forEach(wornArmor -> {
+                if (wornArmor != null && wornArmor.is(HFItems.ANGEL_WINGS)) {
+                    if (player.isFallFlying()) {
+                        if (player.getRandom().nextBoolean()) {
+                            dispatcher.glideWings(player, stack);
+                        } else {
+                            dispatcher.flyWings(player, stack);
+                        }
+                    } else if (player.onGround()) {
+                        dispatcher.closeWings(entity, stack);
+                    } else {
+                        dispatcher.openWings(entity, stack);
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        LivingEntity entity = slotContext.entity();
+        if (entity instanceof Player player && !player.level().isClientSide) {
+            if (stack.is(HFItems.ANGEL_WINGS)) {
+                if (player.isFallFlying()) {
+                    if (player.getRandom().nextBoolean()) {
+                        dispatcher.glideWings(player, stack);
+                    } else {
+                        dispatcher.flyWings(player, stack);
+                    }
+                } else if (player.onGround()) {
+                    dispatcher.closeWings(player, stack);
+                } else {
+                    dispatcher.openWings(player, stack);
+                }
+            }
+        }
+    }
 
 }

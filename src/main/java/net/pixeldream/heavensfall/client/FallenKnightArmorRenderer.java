@@ -19,7 +19,7 @@ public class FallenKnightArmorRenderer extends AzArmorRenderer {
     public FallenKnightArmorRenderer() {
         super(
                 AzArmorRendererConfig.builder(MODEL, TEXTURE)
-                        .setAnimatorProvider(ArmorAnimator::new)
+                        .setAnimatorProvider(FallenKnightAnimator::new)
 //                        .setBoneProvider(new ArclightBoneProvider())
                         .build()
         );

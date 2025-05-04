@@ -17,15 +17,14 @@ public class HFItems {
     public static final DeferredItem<Item> HOLY_GREATSWORD = ITEMS_ARMORY.register("holy_greatsword",
             () -> new SwordItem(Tiers.DIAMOND, new Item.Properties().
                     attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f))));
-//
-//    // Armors //
-//
-//    public static final DeferredItem<Item> ANGEL_WINGS = ITEMS_ARMORY.register("angel_wings",
-//            () -> new AnimatedWingsItem(
-//                    ArmorMaterials.NETHERITE,
-//                    ArmorItem.Type.CHESTPLATE,
-//                    new Item.Properties().stacksTo(1).durability(1024)
-//            ));
+
+    // Armors //
+
+    public static final DeferredItem<Item> ANGEL_WINGS = ITEMS_ARMORY.register("angel_wings",
+            () -> new AnimatedWingsItem(
+                    ArmorItem.Type.CHESTPLATE,
+                    new Item.Properties().stacksTo(1).durability(1024)
+            ));
 
     public static final DeferredItem<Item> ARCLIGHT_HELMET = ITEMS_ARMORY.register("arclight_helmet",
             () -> new ArlightArmorItem(

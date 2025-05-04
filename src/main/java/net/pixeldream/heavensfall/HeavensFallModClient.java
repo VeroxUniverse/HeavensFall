@@ -1,7 +1,6 @@
 package net.pixeldream.heavensfall;
 
 import mod.azure.azurelib.rewrite.render.armor.AzArmorRendererRegistry;
-import mod.azure.azurelib.rewrite.render.item.AzItemRendererRegistry;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,11 +19,11 @@ public class HeavensFallModClient {
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
 
-//        AzArmorRendererRegistry.register(
-//                WingsItemRenderer::new,
-//                HFItems.ANGEL_WINGS.get()
-//
-//        );
+        AzArmorRendererRegistry.register(
+                WingsItemRenderer::new,
+                HFItems.ANGEL_WINGS.get()
+
+        );
         AzArmorRendererRegistry.register(
                 ArclightArmorRenderer::new,
                 HFItems.ARCLIGHT_HELMET.get(),
@@ -40,10 +39,10 @@ public class HeavensFallModClient {
                 HFItems.FALLEN_BOOTS.get()
         );
 
-//        CuriosRendererRegistry.register(
-//                HFItems.ANGEL_WINGS.get(),
-//                WingsCurioRenderer::new
-//        );
+        CuriosRendererRegistry.register(
+                HFItems.ANGEL_WINGS.get(),
+                WingsCurioRenderer::new
+        );
     }
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
