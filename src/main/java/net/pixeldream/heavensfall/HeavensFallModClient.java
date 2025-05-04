@@ -19,9 +19,10 @@ public class HeavensFallModClient {
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
 
-        AzItemRendererRegistry.register(
-                HFItems.ANGEL_WINGS.get(),
-                WingsItemRenderer::new
+        AzArmorRendererRegistry.register(
+                WingsItemRenderer::new,
+                HFItems.ANGEL_WINGS.get()
+
         );
 
         AzArmorRendererRegistry.register(
