@@ -3,17 +3,12 @@ package net.pixeldream.heavensfall;
 import com.mojang.logging.LogUtils;
 import mod.azure.azurelib.common.internal.common.AzureLib;
 import mod.azure.azurelib.rewrite.animation.cache.AzIdentityRegistry;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.items.HFItems;
 import org.slf4j.Logger;
@@ -30,7 +25,7 @@ public class HeavensFallMod {
         HFItems.registerArmory(modEventBus);
         HFItems.registerResources(modEventBus);
         HFCreativeTab.register(modEventBus);
-        NeoForge.EVENT_BUS.register(this);
+//        NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);
     }
@@ -38,25 +33,16 @@ public class HeavensFallMod {
     public void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
         AzIdentityRegistry.register(
-                HFItems.ANGEL_WINGS.get(),
+//                HFItems.ANGEL_WINGS.get(),
                 HFItems.ARCLIGHT_HELMET.get(),
                 HFItems.ARCLIGHT_CHESPLATE.get(),
                 HFItems.ARCLIGHT_LEGGINGS.get(),
-                HFItems.ARCLIGHT_BOOTS.get()
+                HFItems.ARCLIGHT_BOOTS.get(),
+                HFItems.FALLEN_HELMET.get(),
+                HFItems.FALLEN_CHESPLATE.get(),
+                HFItems.FALLEN_LEGGINGS.get(),
+                HFItems.FALLEN_BOOTS.get()
         );
     }
 
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("HELLO from server starting");
-    }
-
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-
-        }
-    }
 }

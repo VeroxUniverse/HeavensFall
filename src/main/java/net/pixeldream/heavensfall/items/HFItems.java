@@ -17,41 +17,56 @@ public class HFItems {
     public static final DeferredItem<Item> HOLY_GREATSWORD = ITEMS_ARMORY.register("holy_greatsword",
             () -> new SwordItem(Tiers.DIAMOND, new Item.Properties().
                     attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f))));
-
-    // Armors //
-
-    public static final DeferredItem<Item> ANGEL_WINGS = ITEMS_ARMORY.register("angel_wings",
-            () -> new AnimatedWingsItem(
-                    ArmorMaterials.NETHERITE,
-                    ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties().stacksTo(1).durability(1024)
-            ));
+//
+//    // Armors //
+//
+//    public static final DeferredItem<Item> ANGEL_WINGS = ITEMS_ARMORY.register("angel_wings",
+//            () -> new AnimatedWingsItem(
+//                    ArmorMaterials.NETHERITE,
+//                    ArmorItem.Type.CHESTPLATE,
+//                    new Item.Properties().stacksTo(1).durability(1024)
+//            ));
 
     public static final DeferredItem<Item> ARCLIGHT_HELMET = ITEMS_ARMORY.register("arclight_helmet",
             () -> new ArlightArmorItem(
-                    ArmorMaterials.DIAMOND,
                     ArmorItem.Type.HELMET,
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> ARCLIGHT_CHESPLATE = ITEMS_ARMORY.register("arclight_chestplate",
             () -> new ArlightArmorItem(
-                    ArmorMaterials.DIAMOND,
                     ArmorItem.Type.CHESTPLATE,
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> ARCLIGHT_LEGGINGS = ITEMS_ARMORY.register("arclight_leggings",
             () -> new ArlightArmorItem(
-                    ArmorMaterials.DIAMOND,
                     ArmorItem.Type.LEGGINGS,
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> ARCLIGHT_BOOTS = ITEMS_ARMORY.register("arclight_boots",
             () -> new ArlightArmorItem(
-                    ArmorMaterials.DIAMOND,
                     ArmorItem.Type.BOOTS,
                     new Item.Properties()
             ));
-
+    public static final DeferredItem<Item> FALLEN_HELMET = ITEMS_ARMORY.register("fallen_helmet",
+            () -> new ArlightArmorItem(
+                    ArmorItem.Type.HELMET,
+                    new Item.Properties()
+            ));
+    public static final DeferredItem<Item> FALLEN_CHESPLATE = ITEMS_ARMORY.register("fallen_chestplate",
+            () -> new ArlightArmorItem(
+                    ArmorItem.Type.CHESTPLATE,
+                    new Item.Properties()
+            ));
+    public static final DeferredItem<Item> FALLEN_LEGGINGS = ITEMS_ARMORY.register("fallen_leggings",
+            () -> new ArlightArmorItem(
+                    ArmorItem.Type.LEGGINGS,
+                    new Item.Properties()
+            ));
+    public static final DeferredItem<Item> FALLEN_BOOTS = ITEMS_ARMORY.register("fallen_boots",
+            () -> new ArlightArmorItem(
+                    ArmorItem.Type.BOOTS,
+                    new Item.Properties()
+            ));
     // Resources //
 
 

@@ -1,16 +1,14 @@
 package net.pixeldream.heavensfall.items.armors;
 
-import net.minecraft.core.Holder;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
 import net.pixeldream.heavensfall.client.ArmorDispatcher;
 
-public class ArlightArmorItem extends ArmorItem {
+public class FallenArmorItem extends ArmorItem {
 
     public final ArmorDispatcher DISPATCHER;
 
-    public ArlightArmorItem(Type type, Properties properties) {
+    public FallenArmorItem(Type type, Properties properties) {
         super(ArmorMaterials.DIAMOND, type, properties);
         this.DISPATCHER = new ArmorDispatcher();
     }

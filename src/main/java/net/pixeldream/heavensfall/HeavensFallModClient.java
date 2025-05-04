@@ -8,6 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.pixeldream.heavensfall.client.ArclightArmorRenderer;
+import net.pixeldream.heavensfall.client.FallenKnightArmorRenderer;
 import net.pixeldream.heavensfall.client.WingsCurioRenderer;
 import net.pixeldream.heavensfall.client.WingsItemRenderer;
 import net.pixeldream.heavensfall.items.HFItems;
@@ -19,12 +20,11 @@ public class HeavensFallModClient {
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
 
-        AzArmorRendererRegistry.register(
-                WingsItemRenderer::new,
-                HFItems.ANGEL_WINGS.get()
-
-        );
-
+//        AzArmorRendererRegistry.register(
+//                WingsItemRenderer::new,
+//                HFItems.ANGEL_WINGS.get()
+//
+//        );
         AzArmorRendererRegistry.register(
                 ArclightArmorRenderer::new,
                 HFItems.ARCLIGHT_HELMET.get(),
@@ -32,16 +32,21 @@ public class HeavensFallModClient {
                 HFItems.ARCLIGHT_LEGGINGS.get(),
                 HFItems.ARCLIGHT_BOOTS.get()
         );
-
-        CuriosRendererRegistry.register(
-                HFItems.ANGEL_WINGS.get(),
-                WingsCurioRenderer::new
+        AzArmorRendererRegistry.register(
+                FallenKnightArmorRenderer::new,
+                HFItems.FALLEN_HELMET.get(),
+                HFItems.FALLEN_CHESPLATE.get(),
+                HFItems.FALLEN_LEGGINGS.get(),
+                HFItems.FALLEN_BOOTS.get()
         );
-    }
 
+//        CuriosRendererRegistry.register(
+//                HFItems.ANGEL_WINGS.get(),
+//                WingsCurioRenderer::new
+//        );
+    }
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-
     }
 
 }
