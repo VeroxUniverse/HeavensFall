@@ -13,7 +13,10 @@ public class HFItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        basicItem(HFItems.HOLY_GREATSWORD.get());
+        basicItem(HFItems.ARCLIGHT_HELMET.get());
+        basicItem(HFItems.ARCLIGHT_CHESPLATE.get());
+        basicItem(HFItems.ARCLIGHT_LEGGINGS.get());
+        basicItem(HFItems.ARCLIGHT_BOOTS.get());
 
     }
 }

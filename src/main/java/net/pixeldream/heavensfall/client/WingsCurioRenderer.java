@@ -21,8 +21,6 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class WingsCurioRenderer implements ICurioRenderer {
-    ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-
     private final WingsItemRenderer wingsRenderer = new WingsItemRenderer();
 
     @Override

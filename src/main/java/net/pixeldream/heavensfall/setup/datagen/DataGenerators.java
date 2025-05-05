@@ -8,6 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.pixeldream.heavensfall.HeavensFallMod;
+import net.pixeldream.heavensfall.setup.datagen.provider.HFItemModelProvider;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -21,7 +22,7 @@ public class DataGenerators {
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        //generator.addProvider(event.includeClient(), new HFItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new HFItemModelProvider(packOutput, existingFileHelper));
 
 
     }
