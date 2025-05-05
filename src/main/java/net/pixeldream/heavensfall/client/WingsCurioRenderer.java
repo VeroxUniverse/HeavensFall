@@ -44,8 +44,6 @@ public class WingsCurioRenderer implements ICurioRenderer {
 
         matrixStack.pushPose();
 
-        matrixStack.translate(0, 0.4, 0.15);
-
         wingsRenderer.prepForRender(entity, stack, EquipmentSlot.CHEST, (HumanoidModel<?>) renderLayerParent.getModel());
 
         AzBakedModel model = wingsRenderer.provider().provideBakedModel(stack);

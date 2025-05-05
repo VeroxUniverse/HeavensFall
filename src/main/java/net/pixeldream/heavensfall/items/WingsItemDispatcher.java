@@ -7,10 +7,26 @@ import net.minecraft.world.item.ItemStack;
 
 public class WingsItemDispatcher {
 
-    private static final AzCommand OPEN_COMMAND = AzCommand.create("base_controller", "open", AzPlayBehaviors.PLAY_ONCE);
-    private static final AzCommand CLOSE_COMMAND = AzCommand.create("base_controller", "close", AzPlayBehaviors.PLAY_ONCE);
-    private static final AzCommand GLIDE_COMMAND = AzCommand.create("base_controller", "glide", AzPlayBehaviors.LOOP);
-    private static final AzCommand FLY_COMMAND = AzCommand.create("base_controller", "fly", AzPlayBehaviors.LOOP);
+    private static final AzCommand OPEN_COMMAND = AzCommand.create(
+            "base_controller",
+            "unfolding",
+            AzPlayBehaviors.HOLD_ON_LAST_FRAME);
+    private static final AzCommand CLOSE_COMMAND = AzCommand.create(
+            "base_controller",
+            "folding",
+            AzPlayBehaviors.HOLD_ON_LAST_FRAME);
+    private static final AzCommand GLIDE_COMMAND = AzCommand.create(
+            "base_controller",
+            "glide",
+            AzPlayBehaviors.LOOP);
+    private static final AzCommand FLY_COMMAND = AzCommand.create(
+            "base_controller",
+            "fly",
+            AzPlayBehaviors.LOOP);
+    private static final AzCommand IDLE_COMMAND = AzCommand.create(
+            "base_controller",
+            "idle",
+            AzPlayBehaviors.LOOP);
 
 
     public void openWings(Entity entity, ItemStack itemStack) {
@@ -27,6 +43,10 @@ public class WingsItemDispatcher {
 
     public void flyWings(Entity entity, ItemStack itemStack) {
         FLY_COMMAND.sendForItem(entity, itemStack);
+    }
+
+    public void idleWings(Entity entity, ItemStack itemStack) {
+        IDLE_COMMAND.sendForItem(entity, itemStack);
     }
 
 
