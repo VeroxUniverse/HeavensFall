@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.items.armors.ArlightArmorItem;
+import net.pixeldream.heavensfall.items.armors.FallenArmorItem;
 
 public class HFItems {
     public static final DeferredRegister.Items ITEMS_ARMORY = DeferredRegister.createItems(HeavensFallMod.MODID);
@@ -47,22 +48,22 @@ public class HFItems {
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> FALLEN_HELMET = ITEMS_ARMORY.register("fallen_helmet",
-            () -> new ArlightArmorItem(
+            () -> new FallenArmorItem(
                     ArmorItem.Type.HELMET,
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> FALLEN_CHESPLATE = ITEMS_ARMORY.register("fallen_chestplate",
-            () -> new ArlightArmorItem(
+            () -> new FallenArmorItem(
                     ArmorItem.Type.CHESTPLATE,
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> FALLEN_LEGGINGS = ITEMS_ARMORY.register("fallen_leggings",
-            () -> new ArlightArmorItem(
+            () -> new FallenArmorItem(
                     ArmorItem.Type.LEGGINGS,
                     new Item.Properties()
             ));
     public static final DeferredItem<Item> FALLEN_BOOTS = ITEMS_ARMORY.register("fallen_boots",
-            () -> new ArlightArmorItem(
+            () -> new FallenArmorItem(
                     ArmorItem.Type.BOOTS,
                     new Item.Properties()
             ));
