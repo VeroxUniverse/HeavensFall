@@ -10,7 +10,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.pixeldream.heavensfall.blocks.HFBlocks;
 import net.pixeldream.heavensfall.hotkey.Hotkeys;
 import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.items.HFItems;
@@ -27,9 +27,10 @@ public class HeavensFallMod {
         HFItems.registerBlocks(modEventBus);
         HFItems.registerArmory(modEventBus);
         HFItems.registerResources(modEventBus);
+        HFBlocks.register(modEventBus);
         HFCreativeTab.register(modEventBus);
 
-//        NeoForge.EVENT_BUS.register(this);
+//      NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);
     }

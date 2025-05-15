@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "part=none": { "model": "heavensfall:block/altar" },
+    "part=center": { "model": "heavensfall:block/altar_multiblock" }
+  }
+}
