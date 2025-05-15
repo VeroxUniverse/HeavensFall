@@ -1,5 +1,16 @@
 {
-  "itemGroup.heavensfall": "Example Mod Tab",
-  "block.heavensfall.example_block": "Example Block",
-  "item.heavensfall.example_item": "Example Item"
+  "heavensfall.itemGroup.armory": "Heavens Fall: Armory",
+  "heavensfall.itemGroup.resources": "Heavens Fall: Resource",
+  "heavensfall.itemGroup.blocks": "Heavens Fall: Blocks",
+
+
+  "item.heavensfall.arclight_helmet": "Arclight Helmet",
+  "item.heavensfall.arclight_chestplate": "Arclight Chestplate",
+  "item.heavensfall.arclight_leggings": "Arclight Leggings",
+  "item.heavensfall.arclight_boots": "Arclight Boots",
+  "item.heavensfall.angel_wings": "Angel Wings",
+
+
+
+  "item.heavensfall.holy_greatsword": "Holy Greatsword"
 }

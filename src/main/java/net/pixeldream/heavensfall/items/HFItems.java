@@ -17,55 +17,55 @@ public class HFItems {
 
     public static final DeferredItem<Item> HOLY_GREATSWORD = ITEMS_ARMORY.register("holy_greatsword",
             () -> new SwordItem(Tiers.DIAMOND, new Item.Properties().
-                    attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f))));
+                    attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f)).rarity(Rarity.RARE)));
 
     // Armors //
 
     public static final DeferredItem<Item> ANGEL_WINGS = ITEMS_ARMORY.register("angel_wings",
             () -> new AnimatedWingsItem(
                     ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties().stacksTo(1).durability(1024)
+                    new Item.Properties().stacksTo(1).durability(1024).rarity(Rarity.EPIC)
             ));
 
     public static final DeferredItem<Item> ARCLIGHT_HELMET = ITEMS_ARMORY.register("arclight_helmet",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.HELMET,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> ARCLIGHT_CHESPLATE = ITEMS_ARMORY.register("arclight_chestplate",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> ARCLIGHT_LEGGINGS = ITEMS_ARMORY.register("arclight_leggings",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.LEGGINGS,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> ARCLIGHT_BOOTS = ITEMS_ARMORY.register("arclight_boots",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.BOOTS,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> FALLEN_HELMET = ITEMS_ARMORY.register("fallen_helmet",
             () -> new FallenArmorItem(
                     ArmorItem.Type.HELMET,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> FALLEN_CHESPLATE = ITEMS_ARMORY.register("fallen_chestplate",
             () -> new FallenArmorItem(
                     ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> FALLEN_LEGGINGS = ITEMS_ARMORY.register("fallen_leggings",
             () -> new FallenArmorItem(
                     ArmorItem.Type.LEGGINGS,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     public static final DeferredItem<Item> FALLEN_BOOTS = ITEMS_ARMORY.register("fallen_boots",
             () -> new FallenArmorItem(
                     ArmorItem.Type.BOOTS,
-                    new Item.Properties()
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
     // Resources //
 
