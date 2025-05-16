@@ -83,8 +83,8 @@ public class AltarBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
-        return saveWithoutMetadata(pRegistries);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     private CompoundTag writeNBT(CompoundTag nbt, HolderLookup.Provider pRegistries) {
@@ -97,19 +97,19 @@ public class AltarBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        readNBT(pTag, pRegistries);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        readNBT(tag, registries);
     }
 
     @Override
-    protected void saveAdditional(@Nonnull CompoundTag tag, HolderLookup.Provider registryAccess) {
-        writeNBT(tag, registryAccess);
+    protected void saveAdditional(@Nonnull CompoundTag tag, HolderLookup.Provider registries) {
+        writeNBT(tag, registries);
     }
 
-    private CompoundTag readNBT(CompoundTag nbt, HolderLookup.Provider pRegistries) {
+    private CompoundTag readNBT(CompoundTag nbt, HolderLookup.Provider registries) {
         if (nbt.contains(NBT_HELD_ITEM)) {
-            heldItem = ItemStack.parseOptional(pRegistries, nbt.getCompound(NBT_HELD_ITEM));
+            heldItem = ItemStack.parseOptional(registries, nbt.getCompound(NBT_HELD_ITEM));
         }
         return nbt;
     }
