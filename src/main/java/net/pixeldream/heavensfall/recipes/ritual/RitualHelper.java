@@ -1,6 +1,7 @@
 package net.pixeldream.heavensfall.recipes.ritual;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -50,35 +51,50 @@ public class RitualHelper {
         return pedestals;
     }
 
-    public static void spawnSmokeAtPedestals(Level level, BlockPos origin) {
-        if (!level.isClientSide()) {
-            BlockPos[] offsets = {
-                    origin.north(2),
-                    origin.south(2),
-                    origin.east(2),
-                    origin.west(2)
-            };
+    public static void spawnSmokeAtPedestals(Level level, BlockPos altarPos) {
+        if (!(level instanceof ServerLevel serverLevel)) return;
 
-            for (BlockPos pos : offsets) {
-                BlockEntity be = level.getBlockEntity(pos);
-                if (be instanceof PedestalBlockEntity) {
-                 spawnPoof(level, pos);
-                }
+        BlockPos[] offsets = {
+                altarPos.north(2),
+                altarPos.south(2),
+                altarPos.east(2),
+                altarPos.west(2)
+        };
+
+        for (BlockPos pedestalPos : offsets) {
+            BlockEntity be = level.getBlockEntity(pedestalPos);
+            if (be instanceof PedestalBlockEntity pedestal) {
+                ItemStack stack = pedestal.getHeldItem();
+                Vector3f color = getColorForItem(stack.getItem());
+                DustParticleOptions dust = new DustParticleOptions(color, 1.0f);
+
+                //spawnParticleBeam(serverLevel, pedestalPos, altarPos, dust);
             }
         }
     }
 
-    public static void spawnPoof(Level level, BlockPos pos) {
-        if (level.isClientSide) return;
-        ((ServerLevel) level).sendParticles(
-                ParticleTypes.POOF,
-                pos.getX() + 0.5,
-                pos.getY() + 1.2,
-                pos.getZ() + 0.5,
-                6,
-                0.1, 0.1, 0.1,
-                0.01
-        );
+
+
+    public static void spawnParticleAtStep(ServerLevel level, BlockPos from, BlockPos to, DustParticleOptions dust, int step, int totalSteps) {
+        double fx = from.getX() + 0.5;
+        double fy = from.getY() + 1.1;
+        double fz = from.getZ() + 0.5;
+
+        double tx = to.getX() + 0.5;
+        double ty = to.getY() + 1.1;
+        double tz = to.getZ() + 0.5;
+
+        double t = step / (double) totalSteps;
+
+        double x = fx + (tx - fx) * t;
+        double y = fy + (ty - fy) * t;
+        double z = fz + (tz - fz) * t;
+
+        level.sendParticles(dust, x, y, z, 1, 0, 0, 0, 0);
+    }
+
+    public static Vector3f getColorForItem(Item item) {
+        return resultToColor.getOrDefault(item, new Vector3f(1.0f, 0.0f, 0.0f));
     }
 
     public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> surroundingPedestals) {
@@ -136,6 +152,7 @@ public class RitualHelper {
             }
         }
 
+        resultToColor.put(result, new Vector3f(1.0f, 0.0f, 0.0f));
         ritualRecipes.put(recipe, result);
         HeavensFallMod.LOGGER.debug("Registered ritual recipe: Central={}, Inputs={}, Result={}", recipe.getCentralItem(), recipe.getInputItems(), result);
     }

@@ -54,7 +54,7 @@ public class RitualRecipeCategory implements IRecipeCategory<RitualRecipe> {
 
     @Override
     public Component getTitle() {
-        return Component.translatable("ui.alshanex_familiars.ritual_recipe_jei");
+        return Component.translatable("ui." + HeavensFallMod.MODID + ".ritual_recipe_jei");
     }
 
     @Override

@@ -160,23 +160,34 @@ public class AltarBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
+        if (level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
             ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
 
-            if(altarStack.isEmpty() && !stack.isEmpty()) {
-                altarBlockEntity.inventory.insertItem(0, stack.copy(), false);
-                stack.shrink(1);
-                altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
-                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
-            } else if(stack.isEmpty() && !altarStack.isEmpty()) {
-                ItemStack extracted = altarBlockEntity.inventory.extractItem(0, 1, false);
-                player.setItemInHand(InteractionHand.MAIN_HAND, extracted);
-                altarBlockEntity.setItemInRecipe(false);
-                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+            if (altarStack.isEmpty()) {
+                if (!stack.isEmpty()) {
+                    altarBlockEntity.inventory.insertItem(0, stack.copy(), false);
+                    stack.shrink(1);
+                    altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
+                    return ItemInteractionResult.SUCCESS;
+                } else {
+                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                }
+            } else {
+                if (stack.isEmpty()) {
+                    ItemStack extracted = altarBlockEntity.inventory.extractItem(0, 1, false);
+                    player.setItemInHand(hand, extracted);
+                    altarBlockEntity.setItemInRecipe(false);
+                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+                    return ItemInteractionResult.SUCCESS;
+                } else {
+                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                }
             }
         }
-        return ItemInteractionResult.SUCCESS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
+
 
 
     @Override

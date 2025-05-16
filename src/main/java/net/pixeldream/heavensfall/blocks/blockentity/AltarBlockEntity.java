@@ -2,11 +2,13 @@ package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
@@ -16,16 +18,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.pixeldream.heavensfall.blocks.ChalkBlock;
 import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
+import org.joml.Vector3f;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class AltarBlockEntity extends BlockEntity {
 
-    private static final String NBT_HELD_ITEM = "heldItem";
-    private ItemStack heldItem = ItemStack.EMPTY;
     private boolean itemInRecipe = false;
     private boolean isValidRitual = false;
     private int counter = 0;
+    private int soundCooldown = 0;
+
+    private int pulseStep = 0;
+    private static final int PULSE_STEPS = 20;
 
     public final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override
@@ -36,22 +44,37 @@ public class AltarBlockEntity extends BlockEntity {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
-            if(!level.isClientSide()) {
+            if (!level.isClientSide()) {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
         }
     };
+
     private float rotation;
 
-    public AltarBlockEntity(BlockPos pos, BlockState blockState) {
-        super(HFBlockEntities.ALTAR_ENTITY.get(), pos, blockState);
+    public AltarBlockEntity(BlockPos pos, BlockState state) {
+        super(HFBlockEntities.ALTAR_ENTITY.get(), pos, state);
+    }
+
+    public boolean hasValidChalkMultiblock(Level level, BlockPos pos) {
+        BlockPos[] offsets = {
+                pos.north(), pos.south(), pos.east(), pos.west(),
+                pos.north().east(), pos.north().west(),
+                pos.south().east(), pos.south().west()
+        };
+
+        for (BlockPos offsetPos : offsets) {
+            if (!(level.getBlockState(offsetPos).getBlock() instanceof ChalkBlock)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public float getRenderingRotation() {
         rotation += 0.5f;
-        if(rotation >= 360) {
-            rotation = 0;
-        }
+        if (rotation >= 360) rotation = 0;
         return rotation;
     }
 
@@ -61,20 +84,18 @@ public class AltarBlockEntity extends BlockEntity {
 
     public void drops() {
         SimpleContainer inv = new SimpleContainer(inventory.getSlots());
-        for(int i = 0; i < inventory.getSlots(); i++) {
+        for (int i = 0; i < inventory.getSlots(); i++) {
             inv.setItem(i, inventory.getStackInSlot(i));
         }
-
         Containers.dropContents(this.level, this.worldPosition, inv);
     }
 
-    public ItemStack getHeldItem() {
-        return heldItem;
+    public void setItemInRecipe(boolean value) {
+        this.itemInRecipe = value;
     }
 
-    public void setHeldItem(ItemStack newItem) {
-        heldItem = newItem;
-        setChanged();
+    public boolean isItemInRecipe() {
+        return this.itemInRecipe;
     }
 
     @Override
@@ -96,50 +117,72 @@ public class AltarBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
-        return saveWithoutMetadata(pRegistries);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
-    public void setItemInRecipe(boolean value) {
-        this.itemInRecipe = value;
-    }
-
-    public boolean isItemInRecipe() {
-        return this.itemInRecipe;
-    }
-
-    public void tick(Level pLevel, BlockPos pPos, BlockState pState){
-        if(itemInRecipe && !pLevel.isClientSide()){
-            isValidRitual = RitualHelper.isValidRecipe(pLevel, pPos, getHeldItem());
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (itemInRecipe && !level.isClientSide()) {
+            boolean chalkCheck = hasValidChalkMultiblock(level, pos);
+            boolean recipeCheck = RitualHelper.isValidRecipe(level, pos, inventory.getStackInSlot(0));
+            isValidRitual = chalkCheck && recipeCheck;
         }
 
-        if(isValidRitual && !pLevel.isClientSide()){
-            if(counter < 100){
-                counter++;
-                if(counter % 10 == 0){
-                    Item result = RitualHelper.getResultForRecipe(pLevel, pPos, getHeldItem());
+        if (isValidRitual && !level.isClientSide()) {
+            for (int pulseCount = 0; pulseCount < 3; pulseCount++) {
+                List<BlockEntity> pedestals = RitualHelper.getSurroundingPedestals(pos, level);
+                for (BlockEntity pedestal : pedestals) {
+                    if (pedestal instanceof PedestalBlockEntity) {
+                        ItemStack stack = ((PedestalBlockEntity) pedestal).getHeldItem();
+                        Vector3f color = RitualHelper.getColorForItem(stack.getItem());
+                        DustParticleOptions dust = new DustParticleOptions(color, 1.0f);
 
-                    ParticleOptions particles = RitualHelper.getParticleForItem(result);
-                    if (particles != null) {
-                        RitualHelper.spawnSmokeAtPedestals(pLevel, pPos);
+                        RitualHelper.spawnParticleAtStep(
+                                (ServerLevel) level,
+                                pedestal.getBlockPos(),
+                                pos,
+                                dust,
+                                pulseStep,
+                                PULSE_STEPS
+                        );
                     }
                 }
+                pulseStep = (pulseStep + 1) % PULSE_STEPS;
             }
-            if(counter == 100){
-                Item result = RitualHelper.getResultForRecipe(pLevel, pPos, getHeldItem());
 
-                ParticleOptions particles = RitualHelper.getParticleForItem(result);
+            if (soundCooldown <= 0) {
+                level.playSound(null, pos, SoundEvents.BEACON_AMBIENT,
+                        net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, 2.0f);
+                soundCooldown = 20;
+            } else {
+                soundCooldown--;
+            }
 
-                RitualHelper.clearItemsFromPedestals(pLevel, pPos);
-                BlockState prevState = this.getBlockState();
-                this.setHeldItem(new ItemStack(result));
-                BlockState nextState = this.getBlockState();
-                pLevel.sendBlockUpdated(pPos, prevState, nextState, Block.UPDATE_CLIENTS);
+            if (counter < 100) {
+                counter++;
+                if (counter % 10 == 0) {
+                    Item result = RitualHelper.getResultForRecipe(level, pos, inventory.getStackInSlot(0));
+                    RitualHelper.spawnSmokeAtPedestals(level, pos);
+                }
+            }
+
+            if (counter == 100) {
+                Item result = RitualHelper.getResultForRecipe(level, pos, inventory.getStackInSlot(0));
+                RitualHelper.clearItemsFromPedestals(level, pos);
+                inventory.setStackInSlot(0, new ItemStack(result));
+
+                level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+                level.playSound(null, pos, SoundEvents.WITHER_SPAWN,
+                        net.minecraft.sounds.SoundSource.BLOCKS, 1f, 2.0f);
 
                 counter = 0;
                 itemInRecipe = false;
                 isValidRitual = false;
+                pulseStep = 0;
+                soundCooldown = 0;
             }
         }
     }
+
+
 }
