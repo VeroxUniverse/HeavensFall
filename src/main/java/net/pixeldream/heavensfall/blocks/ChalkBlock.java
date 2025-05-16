@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.pixeldream.heavensfall.blocks.multiblock.MultiblockPart;
-import net.pixeldream.heavensfall.blocks.multiblock.MultiblockProperties;
+import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
+import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
 
 public class ChalkBlock extends Block {
 

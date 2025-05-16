@@ -21,10 +21,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.pixeldream.heavensfall.blocks.multiblock.MultiblockPart;
-import net.pixeldream.heavensfall.blocks.multiblock.MultiblockProperties;
 import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
+import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
+import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
 import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,25 +161,23 @@ public class AltarBlock extends BaseEntityBlock {
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
-            if(altarBlockEntity.inventory.getStackInSlot(0).isEmpty() && !stack.isEmpty()) {
+            ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
+
+            if(altarStack.isEmpty() && !stack.isEmpty()) {
                 altarBlockEntity.inventory.insertItem(0, stack.copy(), false);
                 stack.shrink(1);
-                altarBlockEntity.setHeldItem(stack.copy());
-                if (RitualHelper.isValidRecipe(level, pos, stack)) {
-                    altarBlockEntity.setItemInRecipe(true);
-                }
+                altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
                 level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
-            } else if(stack.isEmpty()) {
-                ItemStack stackOnPedestal = altarBlockEntity.inventory.extractItem(0, 1, false);
-                player.setItemInHand(InteractionHand.MAIN_HAND, stackOnPedestal);
-                altarBlockEntity.clearContents();
+            } else if(stack.isEmpty() && !altarStack.isEmpty()) {
+                ItemStack extracted = altarBlockEntity.inventory.extractItem(0, 1, false);
+                player.setItemInHand(InteractionHand.MAIN_HAND, extracted);
                 altarBlockEntity.setItemInRecipe(false);
                 level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
             }
         }
-
         return ItemInteractionResult.SUCCESS;
     }
+
 
     @Override
     public @org.jetbrains.annotations.Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {

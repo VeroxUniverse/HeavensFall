@@ -1,4 +1,4 @@
-package net.pixeldream.heavensfall.blocks.multiblock;
+package net.pixeldream.heavensfall.blocks.model;
 
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
