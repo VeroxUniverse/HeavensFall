@@ -2,26 +2,33 @@ package net.pixeldream.heavensfall.blocks;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.pixeldream.heavensfall.blocks.Multiblock.MultiblockPart;
-import net.pixeldream.heavensfall.blocks.Multiblock.MultiblockProperties;
+import net.pixeldream.heavensfall.blocks.multiblock.MultiblockPart;
+import net.pixeldream.heavensfall.blocks.multiblock.MultiblockProperties;
 import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntity;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
+import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
+import org.jetbrains.annotations.Nullable;
 
-public class AltarBlock extends Block {
+public class AltarBlock extends BaseEntityBlock {
 
     public static final MapCodec<AltarBlock> CODEC = simpleCodec(AltarBlock::new);
 
@@ -48,12 +55,6 @@ public class AltarBlock extends Block {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
         if (!level.isClientSide) tryFormMultiblock(level, pos);
-    }
-
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onRemove(state, level, pos, newState, isMoving);
-        if (!level.isClientSide) breakMultiblock(level, pos);
     }
 
     public void tryFormMultiblock(Level level, BlockPos center) {
@@ -134,13 +135,60 @@ public class AltarBlock extends Block {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!level.isClientSide) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof AltarBlockEntity altar) return altar.onUse(player, hand);
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new AltarBlockEntity(blockPos, blockState);
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if(state.getBlock() != newState.getBlock()) {
+            if(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
+                altarBlockEntity.drops();
+                level.updateNeighbourForOutputSignal(pos, this);
+            }
         }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+        if (!level.isClientSide) breakMultiblock(level, pos);
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
+            if(altarBlockEntity.inventory.getStackInSlot(0).isEmpty() && !stack.isEmpty()) {
+                altarBlockEntity.inventory.insertItem(0, stack.copy(), false);
+                stack.shrink(1);
+                altarBlockEntity.setHeldItem(stack.copy());
+                if (RitualHelper.isValidRecipe(level, pos, stack)) {
+                    altarBlockEntity.setItemInRecipe(true);
+                }
+                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
+            } else if(stack.isEmpty()) {
+                ItemStack stackOnPedestal = altarBlockEntity.inventory.extractItem(0, 1, false);
+                player.setItemInHand(InteractionHand.MAIN_HAND, stackOnPedestal);
+                altarBlockEntity.clearContents();
+                altarBlockEntity.setItemInRecipe(false);
+                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+            }
+        }
+
         return ItemInteractionResult.SUCCESS;
     }
 
+    @Override
+    public @org.jetbrains.annotations.Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        if(level.isClientSide()) {
+            return null;
+        }
+
+        return createTickerHelper(blockEntityType, HFBlockEntities.ALTAR_ENTITY.get(),
+                (pLevel1, pPos, pState1, pBlockEntity) -> pBlockEntity.tick(pLevel1, pPos, pState1));
+    }
 
 }

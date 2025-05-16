@@ -10,9 +10,12 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.pixeldream.heavensfall.blocks.HFBlocks;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
 import net.pixeldream.heavensfall.hotkey.Hotkeys;
+import net.pixeldream.heavensfall.recipes.ritual.RitualRecipeManager;
 import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.items.HFItems;
 import org.slf4j.Logger;
@@ -21,7 +24,7 @@ import org.slf4j.Logger;
 public class HeavensFallMod {
 
     public static final String MODID = "heavensfall";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public HeavensFallMod(IEventBus modEventBus, ModContainer modContainer) {
         AzureLib.initialize();
@@ -31,7 +34,7 @@ public class HeavensFallMod {
         HFBlocks.register(modEventBus);
         HFBlockEntities.register(modEventBus);
         HFCreativeTab.register(modEventBus);
-
+        NeoForge.EVENT_BUS.addListener(this::onAddReloadListeners);
 //      NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);
@@ -56,6 +59,10 @@ public class HeavensFallMod {
                 HFItems.FALLEN_LEGGINGS.get(),
                 HFItems.FALLEN_BOOTS.get()
         );
+    }
+
+    private void onAddReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new RitualRecipeManager());
     }
 
 }

@@ -6,6 +6,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntityRenderer;
+import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
+import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntityRenderer;
 import net.pixeldream.heavensfall.client.ArclightArmorRenderer;
 import net.pixeldream.heavensfall.client.FallenKnightArmorRenderer;
 import net.pixeldream.heavensfall.client.WingsCurioRenderer;
@@ -46,6 +49,8 @@ public class HeavensFallModClient {
     }
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_ENTITY.get(), PedestalBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_ENTITY.get(), AltarBlockEntityRenderer::new);
     }
 
 }

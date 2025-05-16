@@ -1,0 +1,10 @@
+{
+  "central_item": "minecraft:diamond",
+  "input_items": [
+    "minecraft:gold_ingot",
+    "minecraft:gold_ingot",
+    "minecraft:emerald",
+    "minecraft:lapis_lazuli"
+  ],
+  "result": "minecraft:nether_star"
+}

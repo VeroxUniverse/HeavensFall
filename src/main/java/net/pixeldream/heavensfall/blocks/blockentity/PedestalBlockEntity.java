@@ -3,96 +3,88 @@ package net.pixeldream.heavensfall.blocks.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
-import javax.annotation.Nonnull;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlockEntity extends BlockEntity {
 
-    private static final String NBT_HELD_ITEM = "heldItem";
-    private ItemStack heldItem = ItemStack.EMPTY;
-
-    public PedestalBlockEntity(BlockPos pos, BlockState state) {
-        super(HFBlockEntities.PEDESTAL_ENTITY.get(), pos, state);
-    }
-
-    public ItemStack getItem() {
-        return heldItem;
-    }
-
-    public void setItem(ItemStack stack) {
-        this.heldItem = stack;
-        setChanged();
-    }
-
-    public void clearItem() {
-        this.heldItem = ItemStack.EMPTY;
-        setChanged();
-    }
-
-    public ItemInteractionResult onUse(Player player, InteractionHand hand) {
-        if (level == null || level.isClientSide) return ItemInteractionResult.SUCCESS;
-
-        ItemStack held = player.getItemInHand(hand);
-        if (!heldItem.isEmpty() && held.isEmpty()) {
-            player.setItemInHand(hand, heldItem);
-            clearItem();
-        } else if (heldItem.isEmpty() && !held.isEmpty()) {
-            heldItem = held.split(1);
+    public final ItemStackHandler inventory = new ItemStackHandler(1) {
+        @Override
+        protected int getStackLimit(int slot, ItemStack stack) {
+            return 1;
         }
 
-        setChanged();
-        return ItemInteractionResult.SUCCESS;
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if(!level.isClientSide()) {
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+            }
+        }
+    };
+    private float rotation;
+
+    public PedestalBlockEntity(BlockPos pos, BlockState blockState) {
+        super(HFBlockEntities.PEDESTAL_ENTITY.get(), pos, blockState);
+    }
+
+    public float getRenderingRotation() {
+        rotation += 0.5f;
+        if(rotation >= 360) {
+            rotation = 0;
+        }
+        return rotation;
+    }
+
+    public void clearContents() {
+        inventory.setStackInSlot(0, ItemStack.EMPTY);
     }
 
     public void drops() {
-        SimpleContainer simpleContainer = new SimpleContainer(heldItem);
-        Containers.dropContents(this.level, this.worldPosition, simpleContainer);
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveWithoutMetadata(registries);
-    }
-
-    private CompoundTag writeNBT(CompoundTag nbt, HolderLookup.Provider pRegistries) {
-        if (!heldItem.isEmpty()) {
-            nbt.put(NBT_HELD_ITEM, heldItem.save(pRegistries));
-        } else {
-            nbt.put(NBT_HELD_ITEM, new CompoundTag());
+        SimpleContainer inv = new SimpleContainer(inventory.getSlots());
+        for(int i = 0; i < inventory.getSlots(); i++) {
+            inv.setItem(i, inventory.getStackInSlot(i));
         }
-        return nbt;
+
+        Containers.dropContents(this.level, this.worldPosition, inv);
+    }
+
+    public ItemStack getHeldItem() {
+        return inventory.getStackInSlot(0);
+    }
+
+    public void setHeldItem(ItemStack stack) {
+        inventory.setStackInSlot(0, stack);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("inventory", inventory.serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        readNBT(tag, registries);
+        inventory.deserializeNBT(registries, tag.getCompound("inventory"));
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    protected void saveAdditional(@Nonnull CompoundTag tag, HolderLookup.Provider registries) {
-        writeNBT(tag, registries);
+    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
+        return saveWithoutMetadata(pRegistries);
     }
-
-    private CompoundTag readNBT(CompoundTag nbt, HolderLookup.Provider registries) {
-        if (nbt.contains(NBT_HELD_ITEM)) {
-            heldItem = ItemStack.parseOptional(registries, nbt.getCompound(NBT_HELD_ITEM));
-        }
-        return nbt;
-    }
-
 }

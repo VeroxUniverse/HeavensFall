@@ -1,4 +1,4 @@
-package net.pixeldream.heavensfall.blocks.Multiblock;
+package net.pixeldream.heavensfall.blocks.multiblock;
 
 import net.minecraft.util.StringRepresentable;
 

@@ -2,116 +2,144 @@ package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
+import org.jetbrains.annotations.Nullable;
 
 public class AltarBlockEntity extends BlockEntity {
 
     private static final String NBT_HELD_ITEM = "heldItem";
     private ItemStack heldItem = ItemStack.EMPTY;
+    private boolean itemInRecipe = false;
+    private boolean isValidRitual = false;
+    private int counter = 0;
 
-    public AltarBlockEntity(BlockPos pos, BlockState state) {
-        super(HFBlockEntities.ALTAR_ENTITY.get(), pos, state);
-    }
-
-    public ItemStack getItem() {
-        return heldItem;
-    }
-
-    public void setItem(ItemStack stack) {
-        this.heldItem = stack;
-        setChanged();
-    }
-
-    public void clearItem() {
-        this.heldItem = ItemStack.EMPTY;
-        setChanged();
-    }
-
-    public ItemInteractionResult onUse(Player player, InteractionHand hand) {
-        if (level == null || level.isClientSide) return ItemInteractionResult.SUCCESS;
-
-        ItemStack held = player.getItemInHand(hand);
-        if (!heldItem.isEmpty() && held.isEmpty()) {
-            player.setItemInHand(hand, heldItem);
-            clearItem();
-        } else if (heldItem.isEmpty() && !held.isEmpty()) {
-            heldItem = held.split(1);
+    public final ItemStackHandler inventory = new ItemStackHandler(1) {
+        @Override
+        protected int getStackLimit(int slot, ItemStack stack) {
+            return 1;
         }
 
-        setChanged();
-        return ItemInteractionResult.SUCCESS;
-    }
-
-    public List<PedestalBlockEntity> getLinkedPedestals() {
-        List<PedestalBlockEntity> pedestals = new ArrayList<>();
-        if (level == null) return pedestals;
-
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
-                if (Math.abs(dx) + Math.abs(dz) != 2) continue;
-                BlockPos pos = worldPosition.offset(dx, 0, dz);
-                if (level.getBlockEntity(pos) instanceof PedestalBlockEntity pedestal) {
-                    pedestals.add(pedestal);
-                }
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if(!level.isClientSide()) {
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
         }
+    };
+    private float rotation;
 
-        return pedestals;
+    public AltarBlockEntity(BlockPos pos, BlockState blockState) {
+        super(HFBlockEntities.ALTAR_ENTITY.get(), pos, blockState);
+    }
+
+    public float getRenderingRotation() {
+        rotation += 0.5f;
+        if(rotation >= 360) {
+            rotation = 0;
+        }
+        return rotation;
+    }
+
+    public void clearContents() {
+        inventory.setStackInSlot(0, ItemStack.EMPTY);
     }
 
     public void drops() {
-        SimpleContainer simpleContainer = new SimpleContainer(heldItem);
-        Containers.dropContents(this.level, this.worldPosition, simpleContainer);
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveWithoutMetadata(registries);
-    }
-
-    private CompoundTag writeNBT(CompoundTag nbt, HolderLookup.Provider pRegistries) {
-        if (!heldItem.isEmpty()) {
-            nbt.put(NBT_HELD_ITEM, heldItem.save(pRegistries));
-        } else {
-            nbt.put(NBT_HELD_ITEM, new CompoundTag());
+        SimpleContainer inv = new SimpleContainer(inventory.getSlots());
+        for(int i = 0; i < inventory.getSlots(); i++) {
+            inv.setItem(i, inventory.getStackInSlot(i));
         }
-        return nbt;
+
+        Containers.dropContents(this.level, this.worldPosition, inv);
+    }
+
+    public ItemStack getHeldItem() {
+        return heldItem;
+    }
+
+    public void setHeldItem(ItemStack newItem) {
+        heldItem = newItem;
+        setChanged();
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("inventory", inventory.serializeNBT(registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        readNBT(tag, registries);
+        inventory.deserializeNBT(registries, tag.getCompound("inventory"));
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    protected void saveAdditional(@Nonnull CompoundTag tag, HolderLookup.Provider registries) {
-        writeNBT(tag, registries);
+    public CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
+        return saveWithoutMetadata(pRegistries);
     }
 
-    private CompoundTag readNBT(CompoundTag nbt, HolderLookup.Provider registries) {
-        if (nbt.contains(NBT_HELD_ITEM)) {
-            heldItem = ItemStack.parseOptional(registries, nbt.getCompound(NBT_HELD_ITEM));
+    public void setItemInRecipe(boolean value) {
+        this.itemInRecipe = value;
+    }
+
+    public boolean isItemInRecipe() {
+        return this.itemInRecipe;
+    }
+
+    public void tick(Level pLevel, BlockPos pPos, BlockState pState){
+        if(itemInRecipe && !pLevel.isClientSide()){
+            isValidRitual = RitualHelper.isValidRecipe(pLevel, pPos, getHeldItem());
         }
-        return nbt;
-    }
 
+        if(isValidRitual && !pLevel.isClientSide()){
+            if(counter < 100){
+                counter++;
+                if(counter % 10 == 0){
+                    Item result = RitualHelper.getResultForRecipe(pLevel, pPos, getHeldItem());
+
+                    ParticleOptions particles = RitualHelper.getParticleForItem(result);
+                    if (particles != null) {
+                        RitualHelper.spawnSmokeAtPedestals(pLevel, pPos);
+                    }
+                }
+            }
+            if(counter == 100){
+                Item result = RitualHelper.getResultForRecipe(pLevel, pPos, getHeldItem());
+
+                ParticleOptions particles = RitualHelper.getParticleForItem(result);
+
+                RitualHelper.clearItemsFromPedestals(pLevel, pPos);
+                BlockState prevState = this.getBlockState();
+                this.setHeldItem(new ItemStack(result));
+                BlockState nextState = this.getBlockState();
+                pLevel.sendBlockUpdated(pPos, prevState, nextState, Block.UPDATE_CLIENTS);
+
+                counter = 0;
+                itemInRecipe = false;
+                isValidRitual = false;
+            }
+        }
+    }
 }
