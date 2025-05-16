@@ -11,11 +11,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RitualHelper {
     private static Map<RitualRecipe, Item> ritualRecipes;
@@ -73,22 +77,12 @@ public class RitualHelper {
         }
     }
 
-
-
-    public static void spawnParticleAtStep(ServerLevel level, BlockPos from, BlockPos to, DustParticleOptions dust, int step, int totalSteps) {
-        double fx = from.getX() + 0.5;
-        double fy = from.getY() + 1.1;
-        double fz = from.getZ() + 0.5;
-
-        double tx = to.getX() + 0.5;
-        double ty = to.getY() + 1.1;
-        double tz = to.getZ() + 0.5;
-
+    public static void spawnParticleBeamFromTo(ServerLevel level, Vec3 from, Vec3 to, DustParticleOptions dust, int step, int totalSteps) {
         double t = step / (double) totalSteps;
 
-        double x = fx + (tx - fx) * t;
-        double y = fy + (ty - fy) * t;
-        double z = fz + (tz - fz) * t;
+        double x = from.x + (to.x - from.x) * t;
+        double y = from.y + (to.y - from.y) * t;
+        double z = from.z + (to.z - from.z) * t;
 
         level.sendParticles(dust, x, y, z, 1, 0, 0, 0, 0);
     }

@@ -1,13 +1,18 @@
 package net.pixeldream.heavensfall;
 
 import mod.azure.azurelib.rewrite.render.armor.AzArmorRendererRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntityRenderer;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
+import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntityRenderer;
 import net.pixeldream.heavensfall.client.ArclightArmorRenderer;
 import net.pixeldream.heavensfall.client.FallenKnightArmorRenderer;

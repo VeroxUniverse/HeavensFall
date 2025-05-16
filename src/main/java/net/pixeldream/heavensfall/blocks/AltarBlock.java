@@ -160,35 +160,65 @@ public class AltarBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
-            ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
-
+        if (!(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity)) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
+        ItemStack playerStack = player.getItemInHand(hand);
+        if (!playerStack.isEmpty()) {
             if (altarStack.isEmpty()) {
-                if (!stack.isEmpty()) {
-                    altarBlockEntity.inventory.insertItem(0, stack.copy(), false);
-                    stack.shrink(1);
-                    altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
-                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
-                    return ItemInteractionResult.SUCCESS;
-                } else {
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                }
+                altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
+                playerStack.shrink(1);
+                altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
+                return ItemInteractionResult.SUCCESS;
+            }
+            if (ItemStack.isSameItemSameComponents(playerStack, altarStack)) {
+                return ItemInteractionResult.FAIL;
+            }
+            ItemStack altarCopy = altarStack.copy();
+            altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
+            playerStack.shrink(1);
+            if (playerStack.isEmpty()) {
+                player.setItemInHand(hand, altarCopy);
             } else {
-                if (stack.isEmpty()) {
-                    ItemStack extracted = altarBlockEntity.inventory.extractItem(0, 1, false);
-                    player.setItemInHand(hand, extracted);
-                    altarBlockEntity.setItemInRecipe(false);
-                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
-                    return ItemInteractionResult.SUCCESS;
-                } else {
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                if (!player.getInventory().add(altarCopy)) {
+                    player.drop(altarCopy, false);
                 }
             }
+            altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+            level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
+            return ItemInteractionResult.SUCCESS;
+        }
+        if (!altarStack.isEmpty()) {
+            boolean canAdd = canAddToMainInventory(player, altarStack);
+            if (!canAdd) {
+                return ItemInteractionResult.FAIL;
+            }
+            ItemStack pedestalCopy = altarStack.copy();
+            if (player.getItemInHand(hand).isEmpty()) {
+                player.setItemInHand(hand, pedestalCopy);
+            } else {
+                if (!player.getInventory().add(pedestalCopy)) {
+                    player.drop(pedestalCopy, false);
+                }
+            }
+            altarBlockEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
+            level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+            return ItemInteractionResult.SUCCESS;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-
+    private boolean canAddToMainInventory(Player player, ItemStack stack) {
+        for (int i = 0; i < 36; i++) {
+            ItemStack slotStack = player.getInventory().getItem(i);
+            if (slotStack.isEmpty()) return true;
+            if (ItemStack.isSameItemSameComponents(slotStack, stack) && slotStack.getCount() < slotStack.getMaxStackSize())
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public @org.jetbrains.annotations.Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {

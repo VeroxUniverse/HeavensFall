@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
@@ -94,11 +95,29 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
 
     @Override
     public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
-        if (!entity.level().isClientSide && flightTicks % 10 == 0) {
-            stack.hurtAndBreak(1, entity, null);
+        if (entity instanceof Player player) {
+            Vec3 lookVec = player.getLookAngle().normalize();
+
+            double speed = 1.2;
+            double maxSinkSpeed = -0.5;
+            double maxRiseSpeed = 0.3;
+
+            double motionY = player.getDeltaMovement().y;
+
+            if (motionY < maxSinkSpeed) {
+                motionY = maxSinkSpeed;
+            } else if (motionY > maxRiseSpeed) {
+                motionY = maxRiseSpeed;
+            }
+
+            player.setDeltaMovement(lookVec.x * speed, motionY, lookVec.z * speed);
+
+            player.fallDistance = 0.0f;
         }
         return true;
     }
+
+
 
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return repair.is(Items.PHANTOM_MEMBRANE);
@@ -131,6 +150,7 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
         if (!level.isClientSide && entity instanceof Player player) {
             if (player.isFallFlying()) {
                 handleFlightState(player, stack);
+                player.fallDistance = 0.0f;
             } else {
                 dispatcher.closeWings(player, stack);
             }
@@ -154,6 +174,10 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
 
         if (player.isFallFlying()) {
             handleFlightState(player, stack);
+
+            elytraFlightTick(stack, player, 0);
+
+            player.fallDistance = 0.0f;
         } else {
             dispatcher.closeWings(player, stack);
         }
@@ -168,5 +192,6 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
             armorAttr.addTransientModifier(armorBonus);
         }
     }
-}
 
+
+}
