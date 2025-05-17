@@ -96,28 +96,10 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
     @Override
     public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
         if (entity instanceof Player player) {
-            Vec3 lookVec = player.getLookAngle().normalize();
-
-            double speed = 1.2;
-            double maxSinkSpeed = -0.5;
-            double maxRiseSpeed = 0.3;
-
-            double motionY = player.getDeltaMovement().y;
-
-            if (motionY < maxSinkSpeed) {
-                motionY = maxSinkSpeed;
-            } else if (motionY > maxRiseSpeed) {
-                motionY = maxRiseSpeed;
-            }
-
-            player.setDeltaMovement(lookVec.x * speed, motionY, lookVec.z * speed);
-
             player.fallDistance = 0.0f;
         }
         return true;
     }
-
-
 
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return repair.is(Items.PHANTOM_MEMBRANE);
@@ -164,19 +146,19 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
 
         var attrInstance = player.getAttribute(FALL_FLY_ATTRIBUTE);
         if (attrInstance != null && attrInstance.getModifier(ANGEL_WINGS_ID) == null) {
-            AttributeModifier modifier = new AttributeModifier(
+            attrInstance.addTransientModifier(new AttributeModifier(
                     ANGEL_WINGS_ID,
                     1.0,
                     AttributeModifier.Operation.ADD_VALUE
-            );
-            attrInstance.addTransientModifier(modifier);
+            ));
+        }
+
+        if (!player.level().isClientSide && player.isFallFlying()) {
+            elytraFlightTick(stack, player, 0);
         }
 
         if (player.isFallFlying()) {
             handleFlightState(player, stack);
-
-            elytraFlightTick(stack, player, 0);
-
             player.fallDistance = 0.0f;
         } else {
             dispatcher.closeWings(player, stack);
@@ -184,14 +166,12 @@ public class AnimatedWingsItem extends ArmorItem implements ICurioItem {
 
         var armorAttr = player.getAttribute(Attributes.ARMOR);
         if (armorAttr != null && armorAttr.getModifier(ARMOR_MODIFIER_ID) == null) {
-            AttributeModifier armorBonus = new AttributeModifier(
+            armorAttr.addTransientModifier(new AttributeModifier(
                     ARMOR_MODIFIER_ID,
                     ARMOR_POINTS,
                     AttributeModifier.Operation.ADD_VALUE
-            );
-            armorAttr.addTransientModifier(armorBonus);
+            ));
         }
     }
-
 
 }

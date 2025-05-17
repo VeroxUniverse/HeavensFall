@@ -1,0 +1,10 @@
+{
+  "central_item": "minecraft:iron_sword",
+  "input_items": [
+    "minecraft:blaze_rod",
+    "minecraft:gold_block",
+    "minecraft:diamond",
+    "minecraft:gold_block"
+  ],
+  "result": "heavensfall:holy_greatsword"
+}
