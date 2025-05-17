@@ -6,6 +6,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.pixeldream.heavensfall.HeavensFallMod;
+import net.pixeldream.heavensfall.blocks.HFBlocks;
 import net.pixeldream.heavensfall.items.HFItems;
 
 public class HFCreativeTab {
@@ -35,7 +36,7 @@ public class HFCreativeTab {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_BLOCKS = CREATIVE_MODE_TABS.register("hf_tab_blocks", () -> CreativeModeTab.builder()
             .title(Component.translatable(HeavensFallMod.MODID + ".itemGroup.blocks"))
-            .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
+            .icon(() -> HFBlocks.PEDESTAL_BLOCK.get().asItem().getDefaultInstance())
             .displayItems((parameters, output) -> {
 
                 HFItems.ITEMS_BLOCKS.getEntries().forEach(item -> {
