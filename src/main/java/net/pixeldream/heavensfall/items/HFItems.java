@@ -31,62 +31,62 @@ public class HFItems {
     public static final DeferredItem<Item> ARCLIGHT_HELMET = ITEMS_ARMORY.register("arclight_helmet",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.HELMET,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> ARCLIGHT_CHESPLATE = ITEMS_ARMORY.register("arclight_chestplate",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> ARCLIGHT_LEGGINGS = ITEMS_ARMORY.register("arclight_leggings",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.LEGGINGS,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> ARCLIGHT_BOOTS = ITEMS_ARMORY.register("arclight_boots",
             () -> new ArlightArmorItem(
                     ArmorItem.Type.BOOTS,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> FALLEN_HELMET = ITEMS_ARMORY.register("fallen_helmet",
             () -> new FallenArmorItem(
                     ArmorItem.Type.HELMET,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> FALLEN_CHESPLATE = ITEMS_ARMORY.register("fallen_chestplate",
             () -> new FallenArmorItem(
                     ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> FALLEN_LEGGINGS = ITEMS_ARMORY.register("fallen_leggings",
             () -> new FallenArmorItem(
                     ArmorItem.Type.LEGGINGS,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> FALLEN_BOOTS = ITEMS_ARMORY.register("fallen_boots",
             () -> new FallenArmorItem(
                     ArmorItem.Type.BOOTS,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> CRIMSON_HELMET = ITEMS_ARMORY.register("crimson_helmet",
             () -> new CrimsonArmorItem(
                     ArmorItem.Type.HELMET,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> CRIMSON_CHESPLATE = ITEMS_ARMORY.register("crimson_chestplate",
             () -> new CrimsonArmorItem(
                     ArmorItem.Type.CHESTPLATE,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> CRIMSON_LEGGINGS = ITEMS_ARMORY.register("crimson_leggings",
             () -> new CrimsonArmorItem(
                     ArmorItem.Type.LEGGINGS,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
     public static final DeferredItem<Item> CRIMSON_BOOTS = ITEMS_ARMORY.register("crimson_boots",
             () -> new CrimsonArmorItem(
                     ArmorItem.Type.BOOTS,
-                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));
 
     // Resources //
