@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import org.jetbrains.annotations.NotNull;
 
-public class FallenKnightAnimator extends AzItemAnimator {
+public class ArclightArmorAnimator extends AzItemAnimator {
 
     private static final ResourceLocation ANIMATIONS = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,

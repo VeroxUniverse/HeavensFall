@@ -20,8 +20,8 @@ public class ArclightArmorRenderer extends AzArmorRenderer {
     public ArclightArmorRenderer() {
         super(
                 AzArmorRendererConfig.builder(MODEL, TEXTURE)
-                        .setAnimatorProvider(ArmorAnimator::new)
-//                        .setBoneProvider(new ArclightBoneProvider())
+                        .setAnimatorProvider(ArclightArmorAnimator::new)
+                        //.setBoneProvider(new ArclightBoneProvider())
                         .build()
         );
     }
