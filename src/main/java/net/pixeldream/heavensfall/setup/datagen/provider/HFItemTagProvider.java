@@ -36,20 +36,6 @@ public class HFItemTagProvider extends ItemTagsProvider {
                 .add(HFItems.ARCLIGHT_LEGGINGS.get())
                 .add(HFItems.ARCLIGHT_BOOTS.get());
 
-        tag(ItemTags.ARMOR_ENCHANTABLE)
-                .add(HFItems.CRIMSON_HELMET.get())
-                .add(HFItems.CRIMSON_CHESPLATE.get())
-                .add(HFItems.CRIMSON_LEGGINGS.get())
-                .add(HFItems.CRIMSON_BOOTS.get())
-                .add(HFItems.FALLEN_HELMET.get())
-                .add(HFItems.FALLEN_CHESPLATE.get())
-                .add(HFItems.FALLEN_LEGGINGS.get())
-                .add(HFItems.FALLEN_BOOTS.get())
-                .add(HFItems.ARCLIGHT_HELMET.get())
-                .add(HFItems.ARCLIGHT_CHESPLATE.get())
-                .add(HFItems.ARCLIGHT_LEGGINGS.get())
-                .add(HFItems.ARCLIGHT_BOOTS.get());
-
         tag(ItemTags.HEAD_ARMOR)
                 .add(HFItems.CRIMSON_HELMET.get())
                 .add(HFItems.FALLEN_HELMET.get())
