@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -16,17 +17,24 @@ import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RitualHelper {
     private static Map<RitualRecipe, Item> ritualRecipes;
     private static Map<Item, ParticleOptions> resultToParticle;
     private static Map<Item, Vector3f> resultToColor;
 
+    private static final Set<Block> CANDLE_BLOCKS = Set.of(
+            Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE,
+            Blocks.LIGHT_BLUE_CANDLE, Blocks.YELLOW_CANDLE, Blocks.LIME_CANDLE,
+            Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE,
+            Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE,
+            Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE,
+            Blocks.BLACK_CANDLE
+    );
+
     public static boolean isValidRecipe(Level level, BlockPos centralPos, ItemStack stack) {
+        if (!hasRequiredEnvironment(level, centralPos)) return false;
         Map<RitualRecipe, Item> recipes = RitualHelper.getRitualRecipes();
         List<BlockEntity> surroundingPedestals = getSurroundingPedestals(centralPos, level);
         if (surroundingPedestals.size() < 4) return false;
@@ -54,6 +62,32 @@ public class RitualHelper {
         }
         return pedestals;
     }
+
+    public static boolean hasRequiredEnvironment(Level level, BlockPos center) {
+        int candleCount = 0;
+        int skullCount = 0;
+
+        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
+
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dy = -1; dy <= 3; dy++) {
+                for (int dz = -3; dz <= 3; dz++) {
+                    checkPos.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
+                    BlockState state = level.getBlockState(checkPos);
+                    Block block = state.getBlock();
+
+                    if (CANDLE_BLOCKS.contains(block)) {
+                        candleCount++;
+                    } else if (block == Blocks.SKELETON_SKULL || block == Blocks.SKELETON_WALL_SKULL) {
+                        skullCount++;
+                    }
+                }
+            }
+        }
+
+        return candleCount >= 6 && skullCount >= 2;
+    }
+
 
     public static void spawnSmokeAtPedestals(Level level, BlockPos altarPos) {
         if (!(level instanceof ServerLevel serverLevel)) return;
@@ -88,7 +122,7 @@ public class RitualHelper {
     }
 
     public static Vector3f getColorForItem(Item item) {
-        return resultToColor.getOrDefault(item, new Vector3f(1.0f, 0.0f, 0.0f));
+        return resultToColor.getOrDefault(item, new Vector3f(0.0f, 0.0f, 0.0f));
     }
 
     public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> surroundingPedestals) {
