@@ -17,6 +17,10 @@ public class HFItemModelProvider extends ItemModelProvider {
         basicItem(HFItems.ARCLIGHT_CHESPLATE.get());
         basicItem(HFItems.ARCLIGHT_LEGGINGS.get());
         basicItem(HFItems.ARCLIGHT_BOOTS.get());
+        basicItem(HFItems.CRIMSON_HELMET.get());
+        basicItem(HFItems.CRIMSON_CHESPLATE.get());
+        basicItem(HFItems.CRIMSON_LEGGINGS.get());
+        basicItem(HFItems.CRIMSON_BOOTS.get());
 
     }
 }

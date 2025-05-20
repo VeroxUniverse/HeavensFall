@@ -57,7 +57,11 @@ public class HeavensFallMod {
                 HFItems.FALLEN_HELMET.get(),
                 HFItems.FALLEN_CHESPLATE.get(),
                 HFItems.FALLEN_LEGGINGS.get(),
-                HFItems.FALLEN_BOOTS.get()
+                HFItems.FALLEN_BOOTS.get(),
+                HFItems.CRIMSON_HELMET.get(),
+                HFItems.CRIMSON_CHESPLATE.get(),
+                HFItems.CRIMSON_LEGGINGS.get(),
+                HFItems.CRIMSON_BOOTS.get()
         );
     }
 

@@ -14,10 +14,7 @@ import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntityRenderer;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntityRenderer;
-import net.pixeldream.heavensfall.client.ArclightArmorRenderer;
-import net.pixeldream.heavensfall.client.FallenKnightArmorRenderer;
-import net.pixeldream.heavensfall.client.WingsCurioRenderer;
-import net.pixeldream.heavensfall.client.WingsItemRenderer;
+import net.pixeldream.heavensfall.client.*;
 import net.pixeldream.heavensfall.items.HFItems;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
@@ -45,6 +42,13 @@ public class HeavensFallModClient {
                 HFItems.FALLEN_CHESPLATE.get(),
                 HFItems.FALLEN_LEGGINGS.get(),
                 HFItems.FALLEN_BOOTS.get()
+        );
+        AzArmorRendererRegistry.register(
+                CrimsonArmorRenderer::new,
+                HFItems.CRIMSON_HELMET.get(),
+                HFItems.CRIMSON_CHESPLATE.get(),
+                HFItems.CRIMSON_LEGGINGS.get(),
+                HFItems.CRIMSON_BOOTS.get()
         );
 
         CuriosRendererRegistry.register(

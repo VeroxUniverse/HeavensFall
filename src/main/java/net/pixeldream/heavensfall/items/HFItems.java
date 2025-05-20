@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.items.armors.ArlightArmorItem;
+import net.pixeldream.heavensfall.items.armors.CrimsonArmorItem;
 import net.pixeldream.heavensfall.items.armors.FallenArmorItem;
 
 public class HFItems {
@@ -67,6 +68,27 @@ public class HFItems {
                     ArmorItem.Type.BOOTS,
                     new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
             ));
+    public static final DeferredItem<Item> CRIMSON_HELMET = ITEMS_ARMORY.register("crimson_helmet",
+            () -> new CrimsonArmorItem(
+                    ArmorItem.Type.HELMET,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+            ));
+    public static final DeferredItem<Item> CRIMSON_CHESPLATE = ITEMS_ARMORY.register("crimson_chestplate",
+            () -> new CrimsonArmorItem(
+                    ArmorItem.Type.CHESTPLATE,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+            ));
+    public static final DeferredItem<Item> CRIMSON_LEGGINGS = ITEMS_ARMORY.register("crimson_leggings",
+            () -> new CrimsonArmorItem(
+                    ArmorItem.Type.LEGGINGS,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+            ));
+    public static final DeferredItem<Item> CRIMSON_BOOTS = ITEMS_ARMORY.register("crimson_boots",
+            () -> new CrimsonArmorItem(
+                    ArmorItem.Type.BOOTS,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)
+            ));
+
     // Resources //
 
 
