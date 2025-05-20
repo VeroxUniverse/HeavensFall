@@ -1,0 +1,8 @@
+// 1.21.1	2025-05-20T20:34:39.2023758	Tags for minecraft:item mod id heavensfall
+e74d68003a571166cef300c77757fe87e675eac0 data/c/tags/item/armors.json
+527d383cd3ff24bb4d6c10787b0806ced0840021 data/minecraft/tags/item/enchantable/chest_armor.json
+e74d68003a571166cef300c77757fe87e675eac0 data/minecraft/tags/item/enchantable/durability.json
+086cf27d0e176f0226ba3816e32c799910ea5fe4 data/minecraft/tags/item/enchantable/foot_armor.json
+c35b33cece554ec79dbead1bee100d74dc57f2f6 data/minecraft/tags/item/enchantable/head_armor.json
+32089dec43d372bdedc9b5aa7550eae0aa253965 data/minecraft/tags/item/enchantable/leg_armor.json
+39f16a59ec95511cc9b6abb6ae464993c10c7b9e data/minecraft/tags/item/swords.json

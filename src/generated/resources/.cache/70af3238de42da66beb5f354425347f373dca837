@@ -1,0 +1,5 @@
+// 1.21.1	2025-05-20T21:05:00.1748368	Block Tags
+3fd2506697f89c669643b08a44d64039a32946e7 data/heavensfall/tags/block/river_replaceables.json
+21e05e0856fbce36f43c3794ca6a9dd5df58b62d data/minecraft/tags/block/mineable/axe.json
+41fe95101bdbeb89151378342bdef110c766c72f data/minecraft/tags/block/mineable/shovel.json
+21e05e0856fbce36f43c3794ca6a9dd5df58b62d data/minecraft/tags/block/needs_iron_tool.json

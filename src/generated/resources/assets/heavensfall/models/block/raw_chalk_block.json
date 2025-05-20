@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "heavensfall:block/raw_chalk_block"
+  }
+}

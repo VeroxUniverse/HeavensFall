@@ -30,7 +30,7 @@ public class RitualHelper {
             Blocks.PINK_CANDLE, Blocks.GRAY_CANDLE, Blocks.LIGHT_GRAY_CANDLE,
             Blocks.CYAN_CANDLE, Blocks.PURPLE_CANDLE, Blocks.BLUE_CANDLE,
             Blocks.BROWN_CANDLE, Blocks.GREEN_CANDLE, Blocks.RED_CANDLE,
-            Blocks.BLACK_CANDLE
+            Blocks.BLACK_CANDLE, Blocks.CANDLE
     );
 
     public static boolean isValidRecipe(Level level, BlockPos centralPos, ItemStack stack) {

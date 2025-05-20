@@ -1,12 +1,17 @@
 package net.pixeldream.heavensfall.blocks;
 
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -22,9 +27,6 @@ public class HFBlocks {
 
     // ALTAR //
 
-    public static final DeferredBlock<Block> CHALK_BLOCK = registerBlock("chalk_block",
-            () -> new ChalkBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_WIRE).noOcclusion()));
-
     public static final DeferredBlock<Block> ALTAR_BLOCK = registerBlock("altar_block",
             () -> new AltarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion()));
 
@@ -33,6 +35,11 @@ public class HFBlocks {
 
     // BLOCKS //
 
+    public static final DeferredBlock<Block> CHALK_BLOCK = registerBlock("chalk_block",
+            () -> new ChalkBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_WIRE).noOcclusion()));
+
+    public static final DeferredBlock<Block> RAW_CHALK_BLOCK = registerBlock("raw_chalk_block",
+            () -> new ColoredFallingBlock(new ColorRGBA(-8356741), BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);

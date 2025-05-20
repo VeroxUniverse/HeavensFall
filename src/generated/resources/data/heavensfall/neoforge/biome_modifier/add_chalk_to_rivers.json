@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_river",
+  "features": "heavensfall:chalk_in_river",
+  "step": "underground_ores"
+}

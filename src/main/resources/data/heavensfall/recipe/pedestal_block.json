@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:red_carpet"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "D": {
+      "item": "minecraft:deepslate_bricks"
+    }
+  },
+  "pattern": [
+    "GWG",
+    " D ",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "heavensfall:pedestal_block"
+  }
+}

@@ -18,6 +18,7 @@ import net.pixeldream.heavensfall.hotkey.Hotkeys;
 import net.pixeldream.heavensfall.recipes.ritual.RitualRecipeManager;
 import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.items.HFItems;
+import net.pixeldream.heavensfall.worldgen.features.HFPlacedFeatures;
 import org.slf4j.Logger;
 
 @Mod(HeavensFallMod.MODID)

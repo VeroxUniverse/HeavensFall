@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:red_carpet"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "D": {
+      "item": "minecraft:deepslate_bricks"
+    },
+    "B": {
+      "item": "minecraft:writable_book"
+    }
+  },
+  "pattern": [
+    "GWG",
+    " B ",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "heavensfall:altar_block"
+  }
+}
