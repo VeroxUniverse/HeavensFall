@@ -24,7 +24,7 @@ import java.util.List;
 
 public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRecipe> {
     public static final ResourceLocation UUID = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "ritual_angel");
-    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "textures/gui/ritual_recipe_gui.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "textures/gui/ritual_recipe_gui_2.png");
 
         public static final RecipeType<AngelRitualRecipe> ANGEL_RITUAL_RECIPE_RECIPE_TYPE =
             new RecipeType<>(UUID, AngelRitualRecipe.class);
@@ -45,7 +45,7 @@ public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRec
 
     public AngelRitualRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEXTURE, 0, 0, 176, 146);
-        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(HFBlocks.PEDESTAL_BLOCK.get()));
+        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(HFBlocks.PEDESTAL_TABLE_BLOCK.get()));
     }
 
     @Override
