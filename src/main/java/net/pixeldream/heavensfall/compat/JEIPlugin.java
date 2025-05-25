@@ -6,8 +6,10 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.pixeldream.heavensfall.HeavensFallMod;
-import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
-import net.pixeldream.heavensfall.recipes.ritual.RitualRecipe;
+import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
+import net.pixeldream.heavensfall.recipes.ritual.AngelRitualRecipe;
+import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
+import net.pixeldream.heavensfall.recipes.ritual.DemonRitualRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +23,18 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
-        registration.addRecipeCategories(new RitualRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new DemonRitualRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new AngelRitualRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        List<RitualRecipe> ritualList = new ArrayList<>(RitualHelper.getRitualRecipes().keySet());
+        List<DemonRitualRecipe> demonRitualList = new ArrayList<>(DemonRitualHelper.getDemonRitualRecipes().keySet());
 
-        registration.addRecipes(RitualRecipeCategory.RITUAL_RECIPE_TYPE, ritualList);
+        registration.addRecipes(DemonRitualRecipeCategory.DEMON_RITUAL_RECIPE_TYPE, demonRitualList);
+
+        List<AngelRitualRecipe> angelRitualList = new ArrayList<>(AngelRitualHelper.getAngelRitualRecipes().keySet());
+
+        registration.addRecipes(AngelRitualRecipeCategory.ANGEL_RITUAL_RECIPE_RECIPE_TYPE, angelRitualList);
     }
 }

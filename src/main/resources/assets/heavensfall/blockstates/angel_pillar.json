@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "half=lower,part=none": { "model": "heavensfall:block/angel_pillar_bottom" },
+    "half=upper,part=none": { "model": "heavensfall:block/angel_pillar_top" },
+    "half=lower,part=center": { "model": "heavensfall:block/angel_pillar_bottom" },
+    "half=upper,part=center": { "model": "heavensfall:block/angel_pillar_top" }
+  }
+}

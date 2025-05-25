@@ -20,6 +20,12 @@ public class HFBlockEntities {
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL_ENTITY = BLOCK_ENTITIES.register("pedestal_entity",
             () -> BlockEntityType.Builder.of(PedestalBlockEntity::new, HFBlocks.PEDESTAL_BLOCK.get()).build(null));
 
+    public static final Supplier<BlockEntityType<AltarPillarBlockEntity>> ALTAR_PILLAR_ENTITY = BLOCK_ENTITIES.register("altar_pillar_entity",
+            () -> BlockEntityType.Builder.of(AltarPillarBlockEntity::new, HFBlocks.ALTAR_PILLAR_BLOCK.get()).build(null));
+
+    public static final Supplier<BlockEntityType<PedestalTableBlockEntity>> PEDESTAL_TABLE_ENTITY = BLOCK_ENTITIES.register("pedestal_table_entity",
+            () -> BlockEntityType.Builder.of(PedestalTableBlockEntity::new, HFBlocks.PEDESTAL_TABLE_BLOCK.get()).build(null));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

@@ -10,10 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntityRenderer;
-import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntityRenderer;
+import net.pixeldream.heavensfall.blocks.blockentity.*;
 import net.pixeldream.heavensfall.client.*;
 import net.pixeldream.heavensfall.items.HFItems;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
@@ -60,6 +57,8 @@ public class HeavensFallModClient {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_ENTITY.get(), PedestalBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_ENTITY.get(), AltarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(), PedestalTableBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_PILLAR_ENTITY.get(), AltarPillarBlockEntityRenderer::new);
     }
 
 }

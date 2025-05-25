@@ -15,18 +15,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.HFBlocks;
-import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
-import net.pixeldream.heavensfall.recipes.ritual.RitualRecipe;
+import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
+import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
+import net.pixeldream.heavensfall.recipes.ritual.AngelRitualRecipe;
 import oshi.util.tuples.Pair;
 
 import java.util.List;
 
-public class RitualRecipeCategory implements IRecipeCategory<RitualRecipe> {
-    public static final ResourceLocation UUID = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "ritual_demonic");
+public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRecipe> {
+    public static final ResourceLocation UUID = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "ritual_angel");
     public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "textures/gui/ritual_recipe_gui.png");
 
-    public static final RecipeType<RitualRecipe> RITUAL_RECIPE_TYPE =
-            new RecipeType<>(UUID, RitualRecipe.class);
+        public static final RecipeType<AngelRitualRecipe> ANGEL_RITUAL_RECIPE_RECIPE_TYPE =
+            new RecipeType<>(UUID, AngelRitualRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -42,14 +43,14 @@ public class RitualRecipeCategory implements IRecipeCategory<RitualRecipe> {
 
     private static final Pair<Integer, Integer> OUTPUT_COORDINATES = new Pair<>(80, 116);
 
-    public RitualRecipeCategory(IGuiHelper helper) {
+    public AngelRitualRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEXTURE, 0, 0, 176, 146);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(HFBlocks.PEDESTAL_BLOCK.get()));
     }
 
     @Override
-    public RecipeType<RitualRecipe> getRecipeType() {
-        return RITUAL_RECIPE_TYPE;
+    public RecipeType<AngelRitualRecipe> getRecipeType() {
+        return ANGEL_RITUAL_RECIPE_RECIPE_TYPE;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class RitualRecipeCategory implements IRecipeCategory<RitualRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RitualRecipe recipe, IFocusGroup focusGroup) {
+    public void setRecipe(IRecipeLayoutBuilder builder, AngelRitualRecipe recipe, IFocusGroup focusGroup) {
         List<Ingredient> ingredients = recipe.getIngredients();
 
         int ingredientsToShow = Math.min(ingredients.size(), INPUT_COORDINATES.size());
@@ -82,7 +83,7 @@ public class RitualRecipeCategory implements IRecipeCategory<RitualRecipe> {
         builder.addSlot(RecipeIngredientRole.INPUT, CENTER_COORDINATES.getA(), CENTER_COORDINATES.getB())
                 .addIngredients(Ingredient.of(new ItemStack(recipe.getCentralItem())));
 
-        Item resultItem = RitualHelper.getRitualRecipes().get(recipe);
+        Item resultItem = AngelRitualHelper.getAngelRitualRecipes().get(recipe);
         if (resultItem != null) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_COORDINATES.getA(), OUTPUT_COORDINATES.getB())
                     .addItemStack(new ItemStack(resultItem));

@@ -33,6 +33,12 @@ public class HFBlocks {
     public static final DeferredBlock<Block> PEDESTAL_BLOCK = registerBlock("pedestal_block",
             () -> new PedestalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion()));
 
+    public static final DeferredBlock<Block> ALTAR_PILLAR_BLOCK = registerBlock("angel_pillar",
+            () -> new AltarPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion()));
+
+    public static final DeferredBlock<Block> PEDESTAL_TABLE_BLOCK = registerBlock("angel_table",
+            () -> new PedestalTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion()));
+
     // BLOCKS //
 
     public static final DeferredBlock<Block> CHALK_BLOCK = registerBlock("chalk_block",
@@ -40,6 +46,9 @@ public class HFBlocks {
 
     public static final DeferredBlock<Block> RAW_CHALK_BLOCK = registerBlock("raw_chalk_block",
             () -> new ColoredFallingBlock(new ColorRGBA(-8356741), BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
+
+    public static final DeferredBlock<Block> RUNE_BLOCK = registerBlock("rune_block",
+            () -> new RuneBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_WIRE).noOcclusion()));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);

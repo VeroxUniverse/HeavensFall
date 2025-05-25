@@ -14,12 +14,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
+import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PedestalBlockEntity extends BlockEntity {
+public class PedestalTableBlockEntity extends BlockEntity {
 
     public static final int TOTAL_ANIMATION_STEPS = 40;
     private int animationStep = 0;
@@ -52,8 +52,8 @@ public class PedestalBlockEntity extends BlockEntity {
         );
 
         for (BlockPos altarPos : possibleAltars) {
-            if (level.getBlockEntity(altarPos) instanceof AltarBlockEntity altar) {
-                boolean isValid = DemonRitualHelper.isValidRecipe(level, altarPos, altar.inventory.getStackInSlot(0));
+            if (level.getBlockEntity(altarPos) instanceof AltarPillarBlockEntity altar) {
+                boolean isValid = AngelRitualHelper.isValidRecipe(level, altarPos, altar.inventory.getStackInSlot(0));
                 if (isValid) {
                     altar.setItemInRecipe(true);
                     return true;
@@ -65,8 +65,8 @@ public class PedestalBlockEntity extends BlockEntity {
 
     private float rotation;
 
-    public PedestalBlockEntity(BlockPos pos, BlockState blockState) {
-        super(HFBlockEntities.PEDESTAL_ENTITY.get(), pos, blockState);
+    public PedestalTableBlockEntity(BlockPos pos, BlockState blockState) {
+        super(HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(), pos, blockState);
     }
 
     public void setAnimationStep(int step) {

@@ -12,17 +12,17 @@ import net.pixeldream.heavensfall.HeavensFallMod;
 
 import java.util.Map;
 
-public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
+public class DemonRitualRecipeManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    public RitualRecipeManager() {
+    public DemonRitualRecipeManager() {
         super(GSON, "ritual_recipes");
     }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> resourceList, ResourceManager resourceManager, ProfilerFiller profiler) {
         HeavensFallMod.LOGGER.info("Loading ritual recipes...");
-        RitualHelper.initializeRecipes();
+        DemonRitualHelper.initializeRecipes();
 
         resourceList.forEach((location, jsonElement) -> {
             try {
@@ -34,8 +34,8 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
             }
         });
 
-        RitualHelper.debugPrintAllRecipes();
-        HeavensFallMod.LOGGER.info("Loaded {} ritual recipes", RitualHelper.getRitualRecipes().size());
+        DemonRitualHelper.debugPrintAllRecipes();
+        HeavensFallMod.LOGGER.info("Loaded {} ritual recipes", DemonRitualHelper.getDemonRitualRecipes().size());
     }
 
     private void loadRitualRecipe(ResourceLocation location, JsonObject json) {
@@ -93,8 +93,8 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
 
         HeavensFallMod.LOGGER.debug("Result item {} resolved to {}", resultItemId, resultItem);
 
-        RitualRecipe recipe = new RitualRecipe(centralItem, inputItems);
-        RitualHelper.addRitualRecipe(recipe, resultItem);
+        DemonRitualRecipe recipe = new DemonRitualRecipe(centralItem, inputItems);
+        DemonRitualHelper.addDemonRitualRecipe(recipe, resultItem);
 
         HeavensFallMod.LOGGER.debug("Registered ritual recipe {} with result {}", location, resultItemId);
     }

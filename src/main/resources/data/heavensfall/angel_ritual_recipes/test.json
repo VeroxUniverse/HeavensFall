@@ -1,0 +1,10 @@
+{
+  "central_item": "minecraft:diamond",
+  "input_items": [
+    "minecraft:gold_ingot",
+    "minecraft:glowstone",
+    "minecraft:quartz",
+    "minecraft:feather"
+  ],
+  "result": "minecraft:obsidian"
+}

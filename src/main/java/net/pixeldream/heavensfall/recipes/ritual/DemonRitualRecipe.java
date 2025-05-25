@@ -7,11 +7,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Objects;
 
-public class RitualRecipe {
+public class DemonRitualRecipe {
     private final Item centralItem;
     private final ItemMultiSet inputItems;
 
-    public RitualRecipe(Item centralItem, ItemMultiSet inputItems) {
+    public DemonRitualRecipe(Item centralItem, ItemMultiSet inputItems) {
         this.centralItem = centralItem;
         this.inputItems = inputItems;
     }
@@ -45,7 +45,7 @@ public class RitualRecipe {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RitualRecipe that = (RitualRecipe) o;
+        DemonRitualRecipe that = (DemonRitualRecipe) o;
 
         if (!Objects.equals(centralItem, that.centralItem)) {
             return false;
@@ -63,7 +63,7 @@ public class RitualRecipe {
 
     @Override
     public String toString() {
-        return "RitualRecipe{" +
+        return "DemonDemonRitualRecipe{" +
                 "centralItem=" + centralItem +
                 ", inputItems=" + inputItems +
                 '}';

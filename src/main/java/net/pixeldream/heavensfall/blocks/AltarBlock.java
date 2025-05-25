@@ -25,7 +25,7 @@ import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
 import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
 import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
-import net.pixeldream.heavensfall.recipes.ritual.RitualHelper;
+import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class AltarBlock extends BaseEntityBlock {
@@ -169,7 +169,7 @@ public class AltarBlock extends BaseEntityBlock {
             if (altarStack.isEmpty()) {
                 altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
                 playerStack.shrink(1);
-                altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+                altarBlockEntity.setItemInRecipe(DemonRitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
                 level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
                 return ItemInteractionResult.SUCCESS;
             }
@@ -186,7 +186,7 @@ public class AltarBlock extends BaseEntityBlock {
                     player.drop(altarCopy, false);
                 }
             }
-            altarBlockEntity.setItemInRecipe(RitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+            altarBlockEntity.setItemInRecipe(DemonRitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
             level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
             return ItemInteractionResult.SUCCESS;
         }

@@ -19,8 +19,8 @@ import org.joml.Vector3f;
 
 import java.util.*;
 
-public class RitualHelper {
-    private static Map<RitualRecipe, Item> ritualRecipes;
+public class DemonRitualHelper {
+    private static Map<DemonRitualRecipe, Item> ritualRecipes;
     private static Map<Item, ParticleOptions> resultToParticle;
     private static Map<Item, Vector3f> resultToColor;
 
@@ -35,12 +35,12 @@ public class RitualHelper {
 
     public static boolean isValidRecipe(Level level, BlockPos centralPos, ItemStack stack) {
         if (!hasRequiredEnvironment(level, centralPos)) return false;
-        Map<RitualRecipe, Item> recipes = RitualHelper.getRitualRecipes();
+        Map<DemonRitualRecipe, Item> recipes = DemonRitualHelper.getDemonRitualRecipes();
         List<BlockEntity> surroundingPedestals = getSurroundingPedestals(centralPos, level);
         if (surroundingPedestals.size() < 4) return false;
 
         ItemMultiSet pedestalItems = getItemsFromPedestals(surroundingPedestals);
-        RitualRecipe recipe = new RitualRecipe(stack.getItem(), pedestalItems);
+        DemonRitualRecipe recipe = new DemonRitualRecipe(stack.getItem(), pedestalItems);
         return recipes.get(recipe) != null;
     }
 
@@ -149,10 +149,10 @@ public class RitualHelper {
     }
 
     public static Item getResultForRecipe(Level level, BlockPos centerPos, ItemStack stack) {
-        Map<RitualRecipe, Item> recipes = getRitualRecipes();
+        Map<DemonRitualRecipe, Item> recipes = getDemonRitualRecipes();
         List<BlockEntity> surroundingPedestals = getSurroundingPedestals(centerPos, level);
         ItemMultiSet pedestalItems = getItemsFromPedestals(surroundingPedestals);
-        RitualRecipe recipe = new RitualRecipe(stack.getItem(), pedestalItems);
+        DemonRitualRecipe recipe = new DemonRitualRecipe(stack.getItem(), pedestalItems);
         Item result = recipes.get(recipe);
 
         if (result == null) {
@@ -163,7 +163,7 @@ public class RitualHelper {
         return result;
     }
 
-    public static void addRitualRecipe(RitualRecipe recipe, Item result) {
+    public static void addDemonRitualRecipe(DemonRitualRecipe recipe, Item result) {
         if (ritualRecipes == null) {
             initializeRecipes();
         }
@@ -173,7 +173,7 @@ public class RitualHelper {
             return;
         }
 
-        for (Map.Entry<RitualRecipe, Item> entry : ritualRecipes.entrySet()) {
+        for (Map.Entry<DemonRitualRecipe, Item> entry : ritualRecipes.entrySet()) {
             if (entry.getKey().equals(recipe)) {
                 HeavensFallMod.LOGGER.warn("Duplicate recipe found! Existing result: {}, New result: {}", entry.getValue(), result);
                 return;
@@ -192,7 +192,7 @@ public class RitualHelper {
         resultToColor = new HashMap<>();
     }
 
-    public static Map<RitualRecipe, Item> getRitualRecipes() {
+    public static Map<DemonRitualRecipe, Item> getDemonRitualRecipes() {
         if (ritualRecipes == null) {
             initializeRecipes();
         }
@@ -220,8 +220,8 @@ public class RitualHelper {
         }
 
         int count = 0;
-        for (Map.Entry<RitualRecipe, Item> entry : ritualRecipes.entrySet()) {
-            RitualRecipe recipe = entry.getKey();
+        for (Map.Entry<DemonRitualRecipe, Item> entry : ritualRecipes.entrySet()) {
+            DemonRitualRecipe recipe = entry.getKey();
             Item result = entry.getValue();
             HeavensFallMod.LOGGER.info("Recipe #{}: Central={}, Inputs={}, Result={}", count++, recipe.getCentralItem(), recipe.getInputItems(), result);
         }

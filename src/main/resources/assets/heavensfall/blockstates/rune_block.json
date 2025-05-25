@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "part=none": [
+      { "model": "heavensfall:block/rune"}
+    ],
+    "part=top_left": { "model": "heavensfall:block/rune_top_left" },
+    "part=top": { "model": "heavensfall:block/rune_top" },
+    "part=top_right": { "model": "heavensfall:block/rune_top_right" },
+    "part=left": { "model": "heavensfall:block/rune_left" },
+    "part=right": { "model": "heavensfall:block/rune_right" },
+    "part=bottom_left": { "model": "heavensfall:block/rune_bottom_left" },
+    "part=bottom": { "model": "heavensfall:block/rune_bottom" },
+    "part=bottom_right": { "model": "heavensfall:block/rune_bottom_right" }
+  }
+}

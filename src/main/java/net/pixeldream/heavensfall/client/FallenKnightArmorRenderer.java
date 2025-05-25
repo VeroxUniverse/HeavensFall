@@ -2,6 +2,7 @@ package net.pixeldream.heavensfall.client;
 
 import mod.azure.azurelib.rewrite.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.rewrite.render.armor.AzArmorRendererConfig;
+import mod.azure.azurelib.rewrite.render.layer.AzAutoGlowingLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.pixeldream.heavensfall.HeavensFallMod;
 
@@ -21,6 +22,7 @@ public class FallenKnightArmorRenderer extends AzArmorRenderer {
                 AzArmorRendererConfig.builder(MODEL, TEXTURE)
                         .setAnimatorProvider(FallenKnightAnimator::new)
 //                        .setBoneProvider(new ArclightBoneProvider())
+                        .addRenderLayer(new AzAutoGlowingLayer<>())
                         .build()
         );
     }
