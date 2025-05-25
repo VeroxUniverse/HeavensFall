@@ -19,14 +19,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalTableBlock extends BaseEntityBlock {
 
     public static final MapCodec<PedestalTableBlock> CODEC = simpleCodec(PedestalTableBlock::new);
 
-    protected static final VoxelShape SHAPE = Block.box(2.0, 0.0, 2.0, 14.0, 8.0, 14.0);
+    protected static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 10.0, 12.0);
 
     @Override
     public MapCodec<? extends PedestalTableBlock> codec() {

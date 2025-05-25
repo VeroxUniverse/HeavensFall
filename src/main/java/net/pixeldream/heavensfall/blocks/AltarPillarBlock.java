@@ -45,8 +45,8 @@ public class AltarPillarBlock extends BaseEntityBlock {
 
     private boolean updatingStructure = false;
 
-    public static final VoxelShape SHAPE_LOWER = Block.box(1.0D, 0.01D, 1.0D, 15.0D, 16.0D, 15.0D);
-    public static final VoxelShape SHAPE_UPPER = Block.box(1.0D, 0.01D, 1.0D, 15.0D, 14.0D, 15.0D);
+    public static final VoxelShape SHAPE_LOWER = Block.box(2.0D, 0.01D, 2.0D, 14.0D, 16.0D, 14.0D);
+    public static final VoxelShape SHAPE_UPPER = Block.box(2.0D, 0.01D, 2.0D, 14.0D, 8.0D, 14.0D);
 
     public static final MapCodec<AltarPillarBlock> CODEC = simpleCodec(AltarPillarBlock::new);
 
@@ -161,7 +161,7 @@ public class AltarPillarBlock extends BaseEntityBlock {
                 }
             }
 
-            level.playSound(null, center, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0f, 1.0f);
+            //level.playSound(null, center, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0f, 1.0f);
 
         } finally {
             updatingStructure = false;
