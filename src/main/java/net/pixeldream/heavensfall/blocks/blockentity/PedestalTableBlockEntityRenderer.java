@@ -96,4 +96,3 @@ public class PedestalTableBlockEntityRenderer implements BlockEntityRenderer<Ped
         return LightTexture.pack(blockLight, skyLight);
     }
 }
-

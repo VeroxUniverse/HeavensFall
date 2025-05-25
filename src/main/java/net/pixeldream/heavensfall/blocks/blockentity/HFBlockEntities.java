@@ -3,6 +3,7 @@ package net.pixeldream.heavensfall.blocks.blockentity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.HFBlocks;

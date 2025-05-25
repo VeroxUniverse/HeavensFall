@@ -14,10 +14,13 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,6 +127,13 @@ public class PedestalTableBlock extends BaseEntityBlock {
         return false;
     }
 
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide && type == HFBlockEntities.PEDESTAL_TABLE_ENTITY.get()) {
+            return (lvl, pos, blockState, be) -> ((PedestalTableBlockEntity) be).clientTick();
+        }
+        return null;
+    }
 
 }
 

@@ -13,16 +13,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.pixeldream.heavensfall.HeavensFallMod;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import org.joml.Vector3f;
 
 import java.util.*;
 
 public class AngelRitualHelper {
-    public static Map<AngelRitualRecipe, Item> ritualRecipes = new HashMap<>();
-    public static Map<Item, Vector3f> resultToColor = new HashMap<>();
+    private static Map<AngelRitualRecipe, Item> ritualRecipes;
     private static Map<Item, ParticleOptions> resultToParticle;
+    private static Map<Item, Vector3f> resultToColor;
 
     public static final Set<Block> CANDLE_BLOCKS = Set.of(
             Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE,
@@ -35,12 +34,13 @@ public class AngelRitualHelper {
 
     public static boolean isValidRecipe(Level level, BlockPos centralPos, ItemStack stack) {
         if (!hasRequiredEnvironment(level, centralPos)) return false;
-        List<BlockEntity> pedestals = getSurroundingPedestals(centralPos, level);
-        if (pedestals.size() < 4) return false;
+        Map<AngelRitualRecipe, Item> recipes = AngelRitualHelper.getAngelRitualRecipes();
+        List<BlockEntity> surroundingPedestals = getSurroundingPedestals(centralPos, level);
+        if (surroundingPedestals.size() < 4) return false;
 
-        ItemMultiSet pedestalItems = getItemsFromPedestals(pedestals);
+        ItemMultiSet pedestalItems = getItemsFromPedestals(surroundingPedestals);
         AngelRitualRecipe recipe = new AngelRitualRecipe(stack.getItem(), pedestalItems);
-        return ritualRecipes.containsKey(recipe);
+        return recipes.get(recipe) != null;
     }
 
     public static boolean hasRequiredEnvironment(Level level, BlockPos center) {
@@ -77,7 +77,7 @@ public class AngelRitualHelper {
 
         for (BlockPos pedestalPos : offsets) {
             BlockEntity be = level.getBlockEntity(pedestalPos);
-            if (be instanceof PedestalBlockEntity pedestal) {
+            if (be instanceof PedestalTableBlockEntity pedestal) {
                 ItemStack stack = pedestal.getHeldItem();
                 Vector3f color = getColorForItem(stack.getItem());
                 DustParticleOptions dust = new DustParticleOptions(color, 1.0f);
@@ -166,26 +166,44 @@ public class AngelRitualHelper {
         }
     }
 
-    public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> pedestals) {
-        ItemMultiSet items = new ItemMultiSet();
-        for (BlockEntity e : pedestals) {
-            if (e instanceof PedestalTableBlockEntity pedestal) {
-                items.add(pedestal.getHeldItem().getItem());
+    public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> surroundingPedestals) {
+        ItemMultiSet pedestalItems = new ItemMultiSet();
+
+        for (BlockEntity pedestal : surroundingPedestals) {
+            if (pedestal instanceof PedestalTableBlockEntity statue) {
+                pedestalItems.add(statue.getHeldItem().getItem());
             }
         }
-        return items;
+        return pedestalItems;
+    }
+
+    public static Item getResultForRecipe(Level level, BlockPos center, ItemStack stack) {
+        List<BlockEntity> pedestals = getSurroundingPedestals(center, level);
+        ItemMultiSet inputs = getItemsFromPedestals(pedestals);
+        AngelRitualRecipe recipe = new AngelRitualRecipe(stack.getItem(), inputs);
+        return ritualRecipes.get(recipe);
     }
 
     public static void addAngelRitualRecipe(AngelRitualRecipe recipe, Item result) {
-        if (ritualRecipes.containsKey(recipe)) {
-            HeavensFallMod.LOGGER.warn("Duplicate angel recipe found: {}", result);
+        if (ritualRecipes == null) {
+            initializeRecipes();
+        }
+
+        if (result == null) {
+            HeavensFallMod.LOGGER.error("Attempted to register a ritual recipe with null result item!");
             return;
         }
 
+        for (Map.Entry<AngelRitualRecipe, Item> entry : ritualRecipes.entrySet()) {
+            if (entry.getKey().equals(recipe)) {
+                HeavensFallMod.LOGGER.warn("Duplicate recipe found! Existing result: {}, New result: {}", entry.getValue(), result);
+                return;
+            }
+        }
+
+        resultToColor.put(result, new Vector3f(1.0f, 0.0f, 0.0f));
         ritualRecipes.put(recipe, result);
-        resultToColor.put(result, new Vector3f(1.0f, 1.0f, 0.8f)); // Soft white glow
-        HeavensFallMod.LOGGER.debug("Registered angel ritual recipe: Central={}, Inputs={}, Result={}",
-                recipe.getCentralItem(), recipe.getInputItems(), result);
+        HeavensFallMod.LOGGER.debug("Registered ritual recipe: Central={}, Inputs={}, Result={}", recipe.getCentralItem(), recipe.getInputItems(), result);
     }
 
     public static void initializeRecipes() {
@@ -212,22 +230,23 @@ public class AngelRitualHelper {
                 return resultToColor.getOrDefault(entry.getKey(), new Vector3f(1, 1, 1));
             }
         }
-        return new Vector3f(1, 1, 1); // Fallback: weiß
-    }
-
-    public static Item getResultForRecipe(Level level, BlockPos center, ItemStack stack) {
-        List<BlockEntity> pedestals = getSurroundingPedestals(center, level);
-        ItemMultiSet inputs = getItemsFromPedestals(pedestals);
-        AngelRitualRecipe recipe = new AngelRitualRecipe(stack.getItem(), inputs);
-        return ritualRecipes.get(recipe);
+        return new Vector3f(1, 1, 1);
     }
 
     public static void debugPrintAllRecipes() {
-        HeavensFallMod.LOGGER.info("=== Angel Ritual Recipes ===");
-        int i = 0;
-        for (Map.Entry<AngelRitualRecipe, Item> entry : ritualRecipes.entrySet()) {
-            HeavensFallMod.LOGGER.info("#{} Central={}, Inputs={}, Result={}",
-                    i++, entry.getKey().getCentralItem(), entry.getKey().getInputItems(), entry.getValue());
+        HeavensFallMod.LOGGER.info("=== DEBUG: All Registered Ritual Recipes ===");
+        if (ritualRecipes == null || ritualRecipes.isEmpty()) {
+            HeavensFallMod.LOGGER.info("No recipes registered!");
+            return;
         }
+
+        int count = 0;
+        for (Map.Entry<AngelRitualRecipe, Item> entry : ritualRecipes.entrySet()) {
+            AngelRitualRecipe recipe = entry.getKey();
+            Item result = entry.getValue();
+            HeavensFallMod.LOGGER.info("Recipe #{}: Central={}, Inputs={}, Result={}", count++, recipe.getCentralItem(), recipe.getInputItems(), result);
+        }
+        HeavensFallMod.LOGGER.info("=== END DEBUG ===");
     }
 }
+

@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.Objects;
+import java.util.*;
 
 public class DemonRitualRecipe {
     private final Item centralItem;
@@ -26,17 +26,14 @@ public class DemonRitualRecipe {
 
     public NonNullList<Ingredient> getIngredients() {
         NonNullList<Ingredient> ingredients = NonNullList.create();
-
-        for (Item item : inputItems.getUniqueItems()) {
-            if (item != null) {
-                int count = inputItems.getCount(item);
-                for (int i = 0; i < count; i++) {
-                    Ingredient ingredient = Ingredient.of(new ItemStack(item));
-                    ingredients.add(ingredient);
-                }
+        List<Item> sortedItems = new ArrayList<>((Collection) inputItems.getUniqueItems());
+        sortedItems.sort(Comparator.comparing(Item::toString));
+        for (Item item : sortedItems) {
+            int count = inputItems.getCount(item);
+            for (int i = 0; i < count; i++) {
+                ingredients.add(Ingredient.of(new ItemStack(item)));
             }
         }
-
         return ingredients;
     }
 

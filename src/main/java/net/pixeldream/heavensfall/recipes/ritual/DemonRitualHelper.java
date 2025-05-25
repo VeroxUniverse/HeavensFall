@@ -133,7 +133,6 @@ public class DemonRitualHelper {
                 pedestalItems.add(statue.getHeldItem().getItem());
             }
         }
-
         return pedestalItems;
     }
 
