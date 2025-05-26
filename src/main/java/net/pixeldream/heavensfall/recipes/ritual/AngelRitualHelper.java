@@ -12,9 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.pixeldream.heavensfall.HeavensFallMod;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import org.joml.Vector3f;
 
@@ -223,6 +221,10 @@ public class AngelRitualHelper {
             initializeRecipes();
         }
         return ritualRecipes;
+    }
+
+    public static Set<Item> getAllResultItems() {
+        return new HashSet<>(ritualRecipes.values());
     }
 
     public static ParticleOptions getParticleForItem(Item item) {

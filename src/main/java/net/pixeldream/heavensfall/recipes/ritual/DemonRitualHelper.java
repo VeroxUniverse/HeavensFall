@@ -150,12 +150,6 @@ public class DemonRitualHelper {
         ItemMultiSet pedestalItems = getItemsFromPedestals(surroundingPedestals);
         DemonRitualRecipe recipe = new DemonRitualRecipe(stack.getItem(), pedestalItems);
         Item result = recipes.get(recipe);
-
-        if (result == null) {
-            HeavensFallMod.LOGGER.warn("No result found for ritual with central item {} and inputs {}",
-                    stack.getItem(), pedestalItems);
-        }
-
         return result;
     }
 
@@ -193,6 +187,10 @@ public class DemonRitualHelper {
             initializeRecipes();
         }
         return ritualRecipes;
+    }
+
+    public static Set<Item> getAllResultItems() {
+        return new HashSet<>(ritualRecipes.values());
     }
 
     public static void debugPrintAllRecipes() {

@@ -1,11 +1,13 @@
 package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,10 +20,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.ChalkBlock;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
+import net.pixeldream.heavensfall.util.HFCapabilities;
 import org.jetbrains.annotations.Nullable;
+import org.jline.utils.InfoCmp;
 
 import java.util.List;
 
@@ -49,6 +57,51 @@ public class AltarBlockEntity extends BlockEntity {
             }
         }
     };
+
+    public IItemHandler getHopperHandler(@Nullable Direction side) {
+        return new IItemHandler() {
+            @Override
+            public int getSlots() {
+                return inventory.getSlots();
+            }
+
+            @Override
+            public ItemStack getStackInSlot(int slot) {
+                return inventory.getStackInSlot(slot);
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                return inventory.insertItem(slot, stack, simulate);
+            }
+
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                if (!inventory.getStackInSlot(slot).isEmpty() && canExtractOutput()) {
+                    return inventory.extractItem(slot, amount, simulate);
+                }
+                return ItemStack.EMPTY;
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return inventory.getSlotLimit(slot);
+            }
+
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return false;
+            }
+        };
+    }
+
+    public boolean canExtractOutput() {
+        if (isValidRitualRunning()) return false;
+        ItemStack stack = inventory.getStackInSlot(0);
+        if (stack.isEmpty()) return false;
+
+        return DemonRitualHelper.getAllResultItems().contains(stack.getItem());
+    }
 
     public AltarBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.ALTAR_ENTITY.get(), pos, state);

@@ -9,6 +9,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -19,6 +20,7 @@ import net.pixeldream.heavensfall.recipes.ritual.AngelRitualRecipeManager;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualRecipeManager;
 import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.items.HFItems;
+import net.pixeldream.heavensfall.util.HFCapabilities;
 import org.slf4j.Logger;
 
 @Mod(HeavensFallMod.MODID)
@@ -36,6 +38,7 @@ public class HeavensFallMod {
         HFBlockEntities.register(modEventBus);
         HFCreativeTab.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(this::onAddReloadListeners);
+        modEventBus.addListener(HFCapabilities::registerCapabilities);
 //      NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);

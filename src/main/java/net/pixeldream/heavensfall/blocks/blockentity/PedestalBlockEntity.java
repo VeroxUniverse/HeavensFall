@@ -1,13 +1,12 @@
 package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +50,40 @@ public class PedestalBlockEntity extends BlockEntity {
             }
         }
     };
+
+    public IItemHandler getHopperHandler(@Nullable Direction side) {
+        return new IItemHandler() {
+            @Override
+            public int getSlots() {
+                return inventory.getSlots();
+            }
+
+            @Override
+            public ItemStack getStackInSlot(int slot) {
+                return inventory.getStackInSlot(slot);
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                return inventory.insertItem(slot, stack, simulate);
+            }
+
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                return ItemStack.EMPTY;
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return inventory.getSlotLimit(slot);
+            }
+
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return true;
+            }
+        };
+    }
 
     public PedestalBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.PEDESTAL_ENTITY.get(), pos, state);
@@ -155,11 +189,6 @@ public class PedestalBlockEntity extends BlockEntity {
         double y = lerp(blend, fromY, spiralY);
         double z = lerp(blend, fromZ, spiralZ);
 
-        if (level instanceof ServerLevel server && server.getGameTime() % 2 == 0) {
-            server.sendParticles(DemonRitualHelper.BLACK_DUST, x, y + 0.05, z,
-                    1, 0.02, 0.02, 0.02, 0.001);
-        }
-
         return new Vec3(x, y, z);
     }
 
@@ -245,4 +274,5 @@ public class PedestalBlockEntity extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
     }
+
 }

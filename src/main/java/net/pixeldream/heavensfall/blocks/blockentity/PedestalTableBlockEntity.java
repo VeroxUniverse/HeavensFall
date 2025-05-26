@@ -1,6 +1,7 @@
 package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
 import org.jetbrains.annotations.Nullable;
@@ -53,6 +55,39 @@ public class PedestalTableBlockEntity extends BlockEntity {
         }
     };
 
+    public IItemHandler getHopperHandler(@Nullable Direction side) {
+        return new IItemHandler() {
+            @Override
+            public int getSlots() {
+                return inventory.getSlots();
+            }
+
+            @Override
+            public ItemStack getStackInSlot(int slot) {
+                return inventory.getStackInSlot(slot);
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                return inventory.insertItem(slot, stack, simulate);
+            }
+
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                return ItemStack.EMPTY;
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return inventory.getSlotLimit(slot);
+            }
+
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return true;
+            }
+        };
+    }
 
     public PedestalTableBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(), pos, state);

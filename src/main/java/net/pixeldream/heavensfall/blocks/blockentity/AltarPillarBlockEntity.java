@@ -1,6 +1,7 @@
 package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.pixeldream.heavensfall.blocks.RuneBlock;
 import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
@@ -48,6 +50,51 @@ public class AltarPillarBlockEntity extends BlockEntity {
             }
         }
     };
+
+    public IItemHandler getHopperHandler(@Nullable Direction side) {
+        return new IItemHandler() {
+            @Override
+            public int getSlots() {
+                return inventory.getSlots();
+            }
+
+            @Override
+            public ItemStack getStackInSlot(int slot) {
+                return inventory.getStackInSlot(slot);
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                return inventory.insertItem(slot, stack, simulate);
+            }
+
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                if (!inventory.getStackInSlot(slot).isEmpty() && canExtractOutput()) {
+                    return inventory.extractItem(slot, amount, simulate);
+                }
+                return ItemStack.EMPTY;
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return inventory.getSlotLimit(slot);
+            }
+
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return false;
+            }
+        };
+    }
+
+    public boolean canExtractOutput() {
+        if (isValidRitualRunning()) return false;
+        ItemStack stack = inventory.getStackInSlot(0);
+        if (stack.isEmpty()) return false;
+
+        return AngelRitualHelper.getAllResultItems().contains(stack.getItem());
+    }
 
     public AltarPillarBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.ALTAR_PILLAR_ENTITY.get(), pos, state);
