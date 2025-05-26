@@ -8,6 +8,7 @@ import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.items.armors.ArlightArmorItem;
 import net.pixeldream.heavensfall.items.armors.CrimsonArmorItem;
 import net.pixeldream.heavensfall.items.armors.FallenArmorItem;
+import net.pixeldream.heavensfall.items.armors.HolyKnightArmorItem;
 
 public class HFItems {
     public static final DeferredRegister.Items ITEMS_ARMORY = DeferredRegister.createItems(HeavensFallMod.MODID);
@@ -45,6 +46,26 @@ public class HFItems {
             ));
     public static final DeferredItem<Item> ARCLIGHT_BOOTS = ITEMS_ARMORY.register("arclight_boots",
             () -> new ArlightArmorItem(
+                    ArmorItem.Type.BOOTS,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
+            ));
+    public static final DeferredItem<Item> HOLY_KNIGHT_HELMET = ITEMS_ARMORY.register("holy_knight_helmet",
+            () -> new HolyKnightArmorItem(
+                    ArmorItem.Type.HELMET,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
+            ));
+    public static final DeferredItem<Item> HOLY_KNIGHT_CHESPLATE = ITEMS_ARMORY.register("holy_knight_chestplate",
+            () -> new HolyKnightArmorItem(
+                    ArmorItem.Type.CHESTPLATE,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
+            ));
+    public static final DeferredItem<Item> HOLY_KNIGHT_LEGGINGS = ITEMS_ARMORY.register("holy_knight_leggings",
+            () -> new HolyKnightArmorItem(
+                    ArmorItem.Type.LEGGINGS,
+                    new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
+            ));
+    public static final DeferredItem<Item> HOLY_KNIGHT_BOOTS = ITEMS_ARMORY.register("holy_knight_boots",
+            () -> new HolyKnightArmorItem(
                     ArmorItem.Type.BOOTS,
                     new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).durability(ArmorItem.Type.BOOTS.getDurability(33))
             ));

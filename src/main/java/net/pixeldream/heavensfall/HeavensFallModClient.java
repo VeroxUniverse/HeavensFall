@@ -35,6 +35,13 @@ public class HeavensFallModClient {
                 HFItems.ARCLIGHT_BOOTS.get()
         );
         AzArmorRendererRegistry.register(
+                HolyKnightArmorRenderer::new,
+                HFItems.HOLY_KNIGHT_HELMET.get(),
+                HFItems.HOLY_KNIGHT_CHESPLATE.get(),
+                HFItems.HOLY_KNIGHT_LEGGINGS.get(),
+                HFItems.HOLY_KNIGHT_BOOTS.get()
+        );
+        AzArmorRendererRegistry.register(
                 FallenKnightArmorRenderer::new,
                 HFItems.FALLEN_HELMET.get(),
                 HFItems.FALLEN_CHESPLATE.get(),

@@ -50,6 +50,10 @@ public class HeavensFallMod {
 
         LOGGER.info("HELLO FROM COMMON SETUP");
         AzIdentityRegistry.register(
+                HFItems.HOLY_KNIGHT_HELMET.get(),
+                HFItems.HOLY_KNIGHT_CHESPLATE.get(),
+                HFItems.HOLY_KNIGHT_LEGGINGS.get(),
+                HFItems.HOLY_KNIGHT_BOOTS.get(),
                 HFItems.ANGEL_WINGS.get(),
                 HFItems.ARCLIGHT_HELMET.get(),
                 HFItems.ARCLIGHT_CHESPLATE.get(),
