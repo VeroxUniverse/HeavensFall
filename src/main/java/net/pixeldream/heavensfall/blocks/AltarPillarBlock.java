@@ -30,6 +30,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.pixeldream.heavensfall.blocks.blockentity.AltarPillarBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
+import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
 import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
 import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
@@ -213,6 +214,19 @@ public class AltarPillarBlock extends BaseEntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
+        if (altarBlockEntity.isValidRitualRunning()) {
+            return ItemInteractionResult.FAIL;
+        }
+
+        boolean anyAnimating = AngelRitualHelper.getSurroundingPedestals(pos, level).stream()
+                .filter(p -> p instanceof PedestalTableBlockEntity)
+                .map(p -> (PedestalTableBlockEntity) p)
+                .anyMatch(PedestalTableBlockEntity::isAnimating);
+
+        if (anyAnimating) {
+            return ItemInteractionResult.FAIL;
+        }
+
         ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
         ItemStack playerStack = player.getItemInHand(hand);
 
@@ -262,63 +276,6 @@ public class AltarPillarBlock extends BaseEntityBlock {
 
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
-
-    /*
-
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
-                                              Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!(level.getBlockEntity(pos) instanceof AltarPillarBlockEntity altarBlockEntity)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
-        ItemStack playerStack = player.getItemInHand(hand);
-        if (!playerStack.isEmpty()) {
-            if (altarStack.isEmpty()) {
-                altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
-                playerStack.shrink(1);
-                altarBlockEntity.setItemInRecipe(AngelRitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
-                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
-                return ItemInteractionResult.SUCCESS;
-            }
-            if (ItemStack.isSameItemSameComponents(playerStack, altarStack)) {
-                return ItemInteractionResult.FAIL;
-            }
-            ItemStack altarCopy = altarStack.copy();
-            altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
-            playerStack.shrink(1);
-            if (playerStack.isEmpty()) {
-                player.setItemInHand(hand, altarCopy);
-            } else {
-                if (!player.getInventory().add(altarCopy)) {
-                    player.drop(altarCopy, false);
-                }
-            }
-            altarBlockEntity.setItemInRecipe(AngelRitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
-            level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
-            return ItemInteractionResult.SUCCESS;
-        }
-        if (!altarStack.isEmpty()) {
-            boolean canAdd = canAddToMainInventory(player, altarStack);
-            if (!canAdd) {
-                return ItemInteractionResult.FAIL;
-            }
-            ItemStack pedestalCopy = altarStack.copy();
-            if (player.getItemInHand(hand).isEmpty()) {
-                player.setItemInHand(hand, pedestalCopy);
-            } else {
-                if (!player.getInventory().add(pedestalCopy)) {
-                    player.drop(pedestalCopy, false);
-                }
-            }
-            altarBlockEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
-            level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
-            return ItemInteractionResult.SUCCESS;
-        }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-    }
-
-     */
 
     private boolean canAddToMainInventory(Player player, ItemStack stack) {
         for (int i = 0; i < 36; i++) {

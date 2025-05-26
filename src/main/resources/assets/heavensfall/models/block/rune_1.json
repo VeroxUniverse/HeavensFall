@@ -1,0 +1,7 @@
+{
+  "parent": "heavensfall:block/chalk",
+  "textures": {
+    "1": "heavensfall:block/rune_1",
+    "particle": "heavensfall:block/rune_circle"
+  }
+}

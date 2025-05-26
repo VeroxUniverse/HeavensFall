@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "heavensfall:chalk_block"
+    },
+    "G": {
+      "item": "minecraft:yellow_dye"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "WGW",
+    "WWW"
+  ],
+  "result": {
+    "count": 8,
+    "id": "heavensfall:rune_block"
+  }
+}

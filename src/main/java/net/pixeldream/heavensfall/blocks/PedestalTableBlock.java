@@ -74,6 +74,9 @@ public class PedestalTableBlock extends BaseEntityBlock {
         }
         ItemStack pedestalStack = pedestalBlockEntity.inventory.getStackInSlot(0);
         ItemStack playerStack = player.getItemInHand(hand);
+        if (pedestalBlockEntity.isAnimating()) {
+            return ItemInteractionResult.FAIL;
+        }
         if (!playerStack.isEmpty()) {
             if (pedestalStack.isEmpty()) {
                 pedestalBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
@@ -129,11 +132,18 @@ public class PedestalTableBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if (level.isClientSide && type == HFBlockEntities.PEDESTAL_TABLE_ENTITY.get()) {
-            return (lvl, pos, blockState, be) -> ((PedestalTableBlockEntity) be).clientTick();
-        }
-        return null;
+        if (type != HFBlockEntities.PEDESTAL_TABLE_ENTITY.get()) return null;
+
+        return (lvl, pos, blockState, be) -> {
+            PedestalTableBlockEntity pedestal = (PedestalTableBlockEntity) be;
+            if (lvl.isClientSide) {
+                pedestal.clientTick();
+            } else {
+                PedestalTableBlockEntity.tick(lvl, pos, blockState, pedestal);
+            }
+        };
     }
+
 
 }
 

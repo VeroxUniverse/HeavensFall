@@ -2,13 +2,13 @@ package net.pixeldream.heavensfall.blocks.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
@@ -21,20 +21,19 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.pixeldream.heavensfall.blocks.ChalkBlock;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
-import org.joml.Vector3f;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class AltarBlockEntity extends BlockEntity {
 
+    public static final int RITUAL_DURATION_TICKS = 100;
+
     private boolean itemInRecipe = false;
     private boolean isValidRitual = false;
     private int counter = 0;
     private int soundCooldown = 0;
-
-    private int pulseStep = 0;
-    private static final int PULSE_STEPS = 20;
+    private float rotation = 0f;
 
     public final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override
@@ -51,8 +50,6 @@ public class AltarBlockEntity extends BlockEntity {
         }
     };
 
-    private float rotation;
-
     public AltarBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.ALTAR_ENTITY.get(), pos, state);
     }
@@ -63,24 +60,25 @@ public class AltarBlockEntity extends BlockEntity {
                 pos.north().east(), pos.north().west(),
                 pos.south().east(), pos.south().west()
         };
-
         for (BlockPos offsetPos : offsets) {
             if (!(level.getBlockState(offsetPos).getBlock() instanceof ChalkBlock)) {
                 return false;
             }
         }
-
         return true;
     }
 
     public float getRenderingRotation() {
-        rotation += 0.5f;
-        if (rotation >= 360) rotation = 0;
+        rotation = (rotation + 0.5f) % 360f;
         return rotation;
     }
 
     public void clearContents() {
         inventory.setStackInSlot(0, ItemStack.EMPTY);
+    }
+
+    public boolean isValidRitualRunning() {
+        return isValidRitual && counter < RITUAL_DURATION_TICKS;
     }
 
     public void drops() {
@@ -130,9 +128,8 @@ public class AltarBlockEntity extends BlockEntity {
 
             if (isValidRitual) {
                 List<BlockEntity> pedestals = DemonRitualHelper.getSurroundingPedestals(pos, level);
-
                 for (BlockEntity pedestal : pedestals) {
-                    if (pedestal instanceof PedestalBlockEntity pedestalBE && pedestalBE.getAltarPos() == null) {
+                    if (pedestal instanceof PedestalBlockEntity pedestalBE && !pedestalBE.isAnimating()) {
                         pedestalBE.startAnimation(pos);
                     }
                 }
@@ -141,73 +138,41 @@ public class AltarBlockEntity extends BlockEntity {
 
         if (isValidRitual && !level.isClientSide()) {
             List<BlockEntity> pedestals = DemonRitualHelper.getSurroundingPedestals(pos, level);
-            int maxCounter = 100;
-
-            int animationStep = (int) ((double) counter / maxCounter * PedestalBlockEntity.TOTAL_ANIMATION_STEPS);
-            animationStep = Math.min(animationStep, PedestalBlockEntity.TOTAL_ANIMATION_STEPS);
-
+            DemonRitualHelper.spawnItemTrailParticles(level, pos);
             for (BlockEntity pedestal : pedestals) {
                 if (pedestal instanceof PedestalBlockEntity pedestalBE) {
-                    pedestalBE.setAnimationStep(animationStep);
                     pedestalBE.setAltarPos(pos);
+                    pedestalBE.clientTick();
                 }
             }
 
-            for (int pulseCount = 0; pulseCount < 3; pulseCount++) {
-                for (BlockEntity pedestal : pedestals) {
-                    if (pedestal instanceof PedestalBlockEntity pedestalBE) {
-                        ItemStack stack = pedestalBE.getHeldItem();
-                        Vector3f color = DemonRitualHelper.getColorForItem(stack.getItem());
-                        DustParticleOptions dust = new DustParticleOptions(color, 1.0f);
-
-                        Vec3 from = pedestalBE.getCurrentRenderItemPosition(pulseStep / (float) PULSE_STEPS);
-                        Vec3 to = new Vec3(pos.getX() + 0.5, pos.getY() + 1.15, pos.getZ() + 0.5);
-
-                        DemonRitualHelper.spawnParticleBeamFromTo(
-                                (ServerLevel) level, from, to, dust, pulseStep, PULSE_STEPS
-                        );
-                    }
-                }
-                pulseStep = (pulseStep + 1) % PULSE_STEPS;
-            }
-
-            if (soundCooldown <= 0) {
-                level.playSound(null, pos, SoundEvents.BEACON_AMBIENT,
-                        net.minecraft.sounds.SoundSource.BLOCKS, 0.1f, 2.0f);
+            if (soundCooldown-- <= 0) {
+                level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.1f, 2.0f);
                 soundCooldown = 20;
-            } else {
-                soundCooldown--;
             }
 
-            if (counter < maxCounter) {
-                counter++;
-                if (counter % 10 == 0) {
-                    DemonRitualHelper.spawnSmokeAtPedestals(level, pos);
-                }
-            }
-
-            if (counter >= maxCounter) {
+            if (counter++ >= RITUAL_DURATION_TICKS) {
                 Item result = DemonRitualHelper.getResultForRecipe(level, pos, inventory.getStackInSlot(0));
-                DemonRitualHelper.clearItemsFromPedestals(level, pos);
                 inventory.setStackInSlot(0, new ItemStack(result));
 
                 for (BlockEntity pedestal : pedestals) {
                     if (pedestal instanceof PedestalBlockEntity pedestalBE) {
+                        pedestalBE.clearContents();
                         pedestalBE.resetAnimation();
                     }
                 }
 
                 level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
-                level.playSound(null, pos, SoundEvents.WITHER_SPAWN,
-                        net.minecraft.sounds.SoundSource.BLOCKS, 1f, 2.0f);
+                if (level instanceof ServerLevel server) {
+                    DemonRitualHelper.spawnExplosionDust(server, pos, 3.0f, 120);
+                    level.playSound(null, pos, SoundEvents.WITHER_SPAWN, SoundSource.BLOCKS, 1.0f, 2.0f);
+                }
 
                 counter = 0;
                 itemInRecipe = false;
                 isValidRitual = false;
-                pulseStep = 0;
                 soundCooldown = 0;
             }
         }
     }
-
 }

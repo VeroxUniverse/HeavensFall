@@ -23,6 +23,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
+import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
 import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
@@ -160,9 +161,24 @@ public class AltarBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
+
         if (!(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+
+        if (altarBlockEntity.isValidRitualRunning()) {
+            return ItemInteractionResult.FAIL;
+        }
+
+        boolean anyAnimating = DemonRitualHelper.getSurroundingPedestals(pos, level).stream()
+                .filter(p -> p instanceof PedestalBlockEntity)
+                .map(p -> (PedestalBlockEntity) p)
+                .anyMatch(PedestalBlockEntity::isAnimating);
+
+        if (anyAnimating) {
+            return ItemInteractionResult.FAIL;
+        }
+
         ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
         ItemStack playerStack = player.getItemInHand(hand);
         if (!playerStack.isEmpty()) {

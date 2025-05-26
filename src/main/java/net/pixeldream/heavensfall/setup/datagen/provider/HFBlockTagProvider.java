@@ -24,13 +24,17 @@ public class HFBlockTagProvider extends BlockTagsProvider {
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(HFBlocks.RAW_CHALK_BLOCK.get());
 
-        this.tag(BlockTags.MINEABLE_WITH_AXE)
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(HFBlocks.ALTAR_BLOCK.get())
-                .add(HFBlocks.PEDESTAL_BLOCK.get());
+                .add(HFBlocks.PEDESTAL_BLOCK.get())
+                .add(HFBlocks.ALTAR_PILLAR_BLOCK.get())
+                .add(HFBlocks.PEDESTAL_TABLE_BLOCK.get());
 
         this.tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(HFBlocks.ALTAR_BLOCK.get())
-                .add(HFBlocks.PEDESTAL_BLOCK.get());
+                .add(HFBlocks.PEDESTAL_BLOCK.get())
+                .add(HFBlocks.ALTAR_PILLAR_BLOCK.get())
+                .add(HFBlocks.PEDESTAL_TABLE_BLOCK.get());
 
         this.tag(HFTags.Blocks.RIVER_REPLACEABLES)
                 .add(Blocks.SAND)

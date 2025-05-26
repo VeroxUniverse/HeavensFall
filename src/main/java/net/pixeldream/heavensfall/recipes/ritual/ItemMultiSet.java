@@ -77,12 +77,25 @@ public class ItemMultiSet {
 
     @Override
     public int hashCode() {
+        int hash = 0;
+        for (Map.Entry<Item, Integer> entry : itemCounts.entrySet()) {
+            hash += Objects.hash(entry.getKey()) * entry.getValue();
+        }
+        return hash;
+    }
+
+    /*
+
+    @Override
+    public int hashCode() {
         int result = 1;
         for (Map.Entry<Item, Integer> entry : itemCounts.entrySet()) {
             result = 31 * result + Objects.hashCode(entry.getKey()) * entry.getValue();
         }
         return result;
     }
+
+     */
 
     @Override
     public String toString() {

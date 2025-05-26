@@ -12,7 +12,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.pixeldream.heavensfall.HeavensFallMod;
+import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import org.joml.Vector3f;
 
@@ -22,6 +24,9 @@ public class AngelRitualHelper {
     private static Map<AngelRitualRecipe, Item> ritualRecipes;
     private static Map<Item, ParticleOptions> resultToParticle;
     private static Map<Item, Vector3f> resultToColor;
+
+    public static final DustParticleOptions GOLD_DUST = new DustParticleOptions(
+            new Vector3f(0.96f, 0.74f, 0.13f), 1.0f);
 
     public static final Set<Block> CANDLE_BLOCKS = Set.of(
             Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE,

@@ -14,11 +14,15 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
 import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends BaseEntityBlock {
@@ -68,6 +72,9 @@ public class PedestalBlock extends BaseEntityBlock {
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!(level.getBlockEntity(pos) instanceof PedestalBlockEntity pedestalBlockEntity)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (pedestalBlockEntity.isAnimating()) {
+            return ItemInteractionResult.FAIL;
         }
         ItemStack pedestalStack = pedestalBlockEntity.inventory.getStackInSlot(0);
         ItemStack playerStack = player.getItemInHand(hand);
@@ -124,6 +131,19 @@ public class PedestalBlock extends BaseEntityBlock {
         return false;
     }
 
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (type != HFBlockEntities.PEDESTAL_ENTITY.get()) return null;
+
+        return (lvl, pos, blockState, be) -> {
+            PedestalBlockEntity pedestal = (PedestalBlockEntity) be;
+            if (lvl.isClientSide) {
+                pedestal.clientTick();
+            } else {
+                PedestalBlockEntity.tick(lvl, pos, blockState, pedestal);
+            }
+        };
+    }
 
 }
 

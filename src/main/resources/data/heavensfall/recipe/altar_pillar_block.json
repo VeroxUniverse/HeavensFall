@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:light_blue_carpet"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "D": {
+      "item": "minecraft:smooth_stone"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone_slab"
+    }
+  },
+  "pattern": [
+    "GWG",
+    "SGS",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "heavensfall:angel_pillar"
+  }
+}

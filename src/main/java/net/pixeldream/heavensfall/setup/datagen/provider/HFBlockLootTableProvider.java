@@ -29,6 +29,11 @@ public class HFBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(HFBlocks.ALTAR_BLOCK.get());
         this.dropSelf(HFBlocks.PEDESTAL_BLOCK.get());
         this.dropSelf(HFBlocks.CHALK_BLOCK.get());
+        this.dropSelf(HFBlocks.RUNE_BLOCK.get());
+        this.dropSelf(HFBlocks.PEDESTAL_TABLE_BLOCK.get());
+
+        this.add(HFBlocks.ALTAR_PILLAR_BLOCK.get(),
+                block -> createDoorTable(HFBlocks.ALTAR_PILLAR_BLOCK.get()));
 
         this.add(HFBlocks.RAW_CHALK_BLOCK.get(),
                 block -> createMultipleOreDrops(

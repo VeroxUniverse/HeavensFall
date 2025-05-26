@@ -12,8 +12,11 @@
 
   "block.heavensfall.chalk_block": "Chalk Dust",
   "block.heavensfall.raw_chalk_block": "Chalk Block",
-  "block.heavensfall.altar_block": "Ritual Altar",
-  "block.heavensfall.pedestal_block": "Ritual Pedestal",
+  "block.heavensfall.rune_block": "Rune Dust",
+  "block.heavensfall.altar_block": "Demonic Ritual Altar",
+  "block.heavensfall.pedestal_block": "Demonic Ritual Pedestal",
+  "block.heavensfall.angel_pillar": "Angel Ritual Altar",
+  "block.heavensfall.angel_table": "Angel Ritual Pedestal",
 
   "ui.heavensfall.ritual_recipe_jei": "Ritual Crafting",
 

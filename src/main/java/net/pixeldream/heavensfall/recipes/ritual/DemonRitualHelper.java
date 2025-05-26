@@ -3,7 +3,6 @@ package net.pixeldream.heavensfall.recipes.ritual;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +22,9 @@ public class DemonRitualHelper {
     private static Map<DemonRitualRecipe, Item> ritualRecipes;
     private static Map<Item, ParticleOptions> resultToParticle;
     private static Map<Item, Vector3f> resultToColor;
+
+    public static final DustParticleOptions BLACK_DUST = new DustParticleOptions(
+            new Vector3f(0f, 0f, 0f), 1.0f);
 
     private static final Set<Block> CANDLE_BLOCKS = Set.of(
             Blocks.WHITE_CANDLE, Blocks.ORANGE_CANDLE, Blocks.MAGENTA_CANDLE,
@@ -88,41 +90,36 @@ public class DemonRitualHelper {
         return candleCount >= 6 && skullCount >= 2;
     }
 
+    public static void spawnItemTrailParticles(Level level, BlockPos altarPos) {
+        if (!(level instanceof ServerLevel server)) return;
 
-    public static void spawnSmokeAtPedestals(Level level, BlockPos altarPos) {
-        if (!(level instanceof ServerLevel serverLevel)) return;
-
-        BlockPos[] offsets = {
-                altarPos.north(2),
-                altarPos.south(2),
-                altarPos.east(2),
-                altarPos.west(2)
-        };
-
-        for (BlockPos pedestalPos : offsets) {
-            BlockEntity be = level.getBlockEntity(pedestalPos);
+        for (BlockEntity be : getSurroundingPedestals(altarPos, level)) {
             if (be instanceof PedestalBlockEntity pedestal) {
-                ItemStack stack = pedestal.getHeldItem();
-                Vector3f color = getColorForItem(stack.getItem());
-                DustParticleOptions dust = new DustParticleOptions(color, 1.0f);
-
-                //spawnParticleBeam(serverLevel, pedestalPos, altarPos, dust);
+                Vec3 pos = pedestal.getCurrentRenderItemPosition(0);
+                server.sendParticles(BLACK_DUST, pos.x, pos.y + 0.05, pos.z,
+                        1, 0.01, 0.01, 0.01, 0.001);
             }
         }
     }
 
-    public static void spawnParticleBeamFromTo(ServerLevel level, Vec3 from, Vec3 to, DustParticleOptions dust, int step, int totalSteps) {
-        double t = step / (double) totalSteps;
+    public static void spawnExplosionDust(ServerLevel server, BlockPos center, float radius, int count) {
+        double cx = center.getX() + 0.5;
+        double cy = center.getY() + 1.2;
+        double cz = center.getZ() + 0.5;
 
-        double x = from.x + (to.x - from.x) * t;
-        double y = from.y + (to.y - from.y) * t;
-        double z = from.z + (to.z - from.z) * t;
+        for (int i = 0; i < count; i++) {
+            double theta = server.random.nextDouble() * 2 * Math.PI;
+            double phi = Math.acos(2 * server.random.nextDouble() - 1);
+            double r = server.random.nextDouble() * radius;
 
-        level.sendParticles(dust, x, y, z, 1, 0, 0, 0, 0);
-    }
+            double dx = r * Math.sin(phi) * Math.cos(theta);
+            double dy = r * Math.cos(phi);
+            double dz = r * Math.sin(phi) * Math.sin(theta);
 
-    public static Vector3f getColorForItem(Item item) {
-        return resultToColor.getOrDefault(item, new Vector3f(0.0f, 0.0f, 0.0f));
+            server.sendParticles(BLACK_DUST,
+                    cx + dx, cy + dy, cz + dz,
+                    0, 0, 0, 0, 0.01);
+        }
     }
 
     public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> surroundingPedestals) {
@@ -196,19 +193,6 @@ public class DemonRitualHelper {
             initializeRecipes();
         }
         return ritualRecipes;
-    }
-
-    public static ParticleOptions getParticleForItem(Item item) {
-        return resultToParticle.getOrDefault(item, ParticleTypes.ENCHANT);
-    }
-
-    public static Vector3f getColorForParticles(ParticleOptions particles) {
-        for (Map.Entry<Item, ParticleOptions> entry : resultToParticle.entrySet()) {
-            if (entry.getValue().equals(particles)) {
-                return resultToColor.getOrDefault(entry.getKey(), new Vector3f(1, 1, 1));
-            }
-        }
-        return new Vector3f(1, 1, 1); // Fallback: weiß
     }
 
     public static void debugPrintAllRecipes() {
