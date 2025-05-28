@@ -154,12 +154,20 @@ public class AltarBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("inventory", inventory.serializeNBT(registries));
+        tag.putBoolean("ItemInRecipe", itemInRecipe);
+        tag.putBoolean("IsValidRitual", isValidRitual);
+        tag.putInt("Counter", counter);
+        tag.putInt("SoundCooldown", soundCooldown);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         inventory.deserializeNBT(registries, tag.getCompound("inventory"));
+        itemInRecipe = tag.getBoolean("ItemInRecipe");
+        isValidRitual = tag.getBoolean("IsValidRitual");
+        counter = tag.getInt("Counter");
+        soundCooldown = tag.getInt("SoundCooldown");
     }
 
     @Nullable

@@ -254,6 +254,9 @@ public class PedestalTableBlockEntity extends BlockEntity {
         tag.putFloat("AnimationStep", animationStep);
         tag.putBoolean("IsAnimating", isAnimating);
         tag.putBoolean("IsMoving", isMoving);
+        tag.putBoolean("TriedToStartRitual", triedToStartRitual);
+        tag.putFloat("LastAnimationStep", lastAnimationStep);
+        tag.putFloat("RenderRotation", renderRotation);
         if (altarPos != null) tag.putLong("AltarPos", altarPos.asLong());
     }
 
@@ -264,6 +267,9 @@ public class PedestalTableBlockEntity extends BlockEntity {
         animationStep = tag.getFloat("AnimationStep");
         isAnimating = tag.getBoolean("IsAnimating");
         isMoving = tag.getBoolean("IsMoving");
+        triedToStartRitual = tag.getBoolean("TriedToStartRitual");
+        lastAnimationStep = tag.getFloat("LastAnimationStep");
+        renderRotation = tag.getFloat("RenderRotation");
         if (tag.contains("AltarPos")) altarPos = BlockPos.of(tag.getLong("AltarPos"));
     }
 
