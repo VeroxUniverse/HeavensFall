@@ -1,12 +1,17 @@
 package net.pixeldream.heavensfall.client;
 
+
+
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.common.model.AzBakedModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,7 +22,9 @@ import net.neoforged.api.distmarker.OnlyIn;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
+
 @OnlyIn(Dist.CLIENT)
+
 public class WingsCurioRenderer implements ICurioRenderer {
     private final WingsItemRenderer wingsRenderer = new WingsItemRenderer();
 
@@ -38,31 +45,14 @@ public class WingsCurioRenderer implements ICurioRenderer {
 
         LivingEntity entity = slotContext.entity();
 
-        if (renderLayerParent.getModel() instanceof HumanoidModel<?> humanoidModel) {
-            ICurioRenderer.followBodyRotations(entity, (HumanoidModel<LivingEntity>) humanoidModel);
-        }
-
         matrixStack.pushPose();
-
         wingsRenderer.prepForRender(entity, stack, EquipmentSlot.CHEST, (HumanoidModel<?>) renderLayerParent.getModel());
-
         AzBakedModel model = wingsRenderer.provider().provideBakedModel(entity, stack);
         ResourceLocation textureLocation = WingsItemRenderer.TEXTURE;
         RenderType renderType = RenderType.entityCutout(textureLocation);
         VertexConsumer buffer = renderTypeBuffer.getBuffer(renderType);
-
-        wingsRenderer.rendererPipeline().render(
-                matrixStack,
-                model,
-                stack,
-                renderTypeBuffer,
-                renderType,
-                buffer,
-                light,
-                partialTicks,
-                0xFFFFFFFF
-        );
-
+        wingsRenderer.rendererPipeline().render(matrixStack, model, stack, renderTypeBuffer, renderType, buffer, netHeadYaw, partialTicks, light);
         matrixStack.popPose();
     }
+
 }

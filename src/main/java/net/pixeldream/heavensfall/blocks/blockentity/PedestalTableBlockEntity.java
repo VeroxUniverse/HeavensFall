@@ -41,15 +41,10 @@ public class PedestalTableBlockEntity extends BlockEntity {
 
     public final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override
-        protected int getStackLimit(int slot, ItemStack stack) {
-            return 1;
-        }
-
-        @Override
         protected void onContentsChanged(int slot) {
             setChanged();
-            if (!level.isClientSide()) {
-                triedToStartRitual = false;
+            triedToStartRitual = false;
+            if (level != null && !level.isClientSide()) {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
         }
@@ -95,9 +90,18 @@ public class PedestalTableBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, PedestalTableBlockEntity pedestal) {
         if (!level.isClientSide) {
-            if (!pedestal.triedToStartRitual && !pedestal.isAnimating && !pedestal.isMoving && !pedestal.getHeldItem().isEmpty()) {
+            if (pedestal.getHeldItem().isEmpty()) {
+                if (pedestal.triedToStartRitual) {
+                    pedestal.triedToStartRitual = false;
+                    pedestal.setChanged();
+                }
+                return;
+            }
+
+            if (!pedestal.triedToStartRitual && !pedestal.isAnimating && !pedestal.isMoving) {
                 if (pedestal.tryStartRitual()) {
                     pedestal.triedToStartRitual = true;
+                    pedestal.setChanged();
                 }
             }
         }
@@ -150,22 +154,24 @@ public class PedestalTableBlockEntity extends BlockEntity {
             lastAnimationStep = animationStep;
             if (animationStep < TOTAL_ANIMATION_STEPS) {
                 animationStep++;
+
+                if (level.isClientSide && animationStep % 2 == 0) {
+                    Vec3 itemPos = getCurrentRenderItemPosition(0);
+                    level.addParticle(ParticleTypes.END_ROD,
+                            itemPos.x, itemPos.y, itemPos.z,
+                            0, 0.01, 0);
+                }
             } else {
                 resetAnimation();
             }
         }
 
-        if (isMoving && animationStep >= TOTAL_ANIMATION_STEPS * 0.85f && animationStep < TOTAL_ANIMATION_STEPS * 0.95f) {
-            if (level instanceof ServerLevel server) {
-                if (server.getGameTime() % 4 == 0) {
-                    double cx = altarPos.getX() + 0.5;
-                    double cy = altarPos.getY() + 1.5;
-                    double cz = altarPos.getZ() + 0.5;
-
+        if (!level.isClientSide && isMoving && altarPos != null) {
+            if (animationStep >= TOTAL_ANIMATION_STEPS * 0.85f && animationStep < TOTAL_ANIMATION_STEPS * 0.95f) {
+                if (level instanceof ServerLevel server && server.getGameTime() % 4 == 0) {
                     server.sendParticles(ParticleTypes.ELECTRIC_SPARK,
-                            cx, cy, cz,
+                            altarPos.getX() + 0.5, altarPos.getY() + 1.5, altarPos.getZ() + 0.5,
                             8, 0.3, 0.3, 0.3, 0.1);
-
                     server.playSound(null, altarPos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 0.2f, 2.0f);
                 }
             }
@@ -235,8 +241,16 @@ public class PedestalTableBlockEntity extends BlockEntity {
     }
 
     public void clearContents() {
-        inventory.setStackInSlot(0, ItemStack.EMPTY);
-        triedToStartRitual = false;
+        this.inventory.setStackInSlot(0, ItemStack.EMPTY);
+        this.triedToStartRitual = false;
+        this.isAnimating = false;
+        this.isMoving = false;
+        this.altarPos = null;
+        this.animationStep = 0;
+        this.setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
     }
 
     public void drops() {

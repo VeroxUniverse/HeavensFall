@@ -11,7 +11,7 @@ import net.pixeldream.heavensfall.client.*;
 import net.pixeldream.heavensfall.items.HFItems;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
-@EventBusSubscriber(modid = HeavensFallMod.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = HeavensFallMod.MODID, value = Dist.CLIENT)
 public class HeavensFallModClient {
 
     @SubscribeEvent

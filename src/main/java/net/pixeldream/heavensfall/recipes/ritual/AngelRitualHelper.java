@@ -77,25 +77,28 @@ public class AngelRitualHelper {
 
     public static void spawnSmokeAtPedestals(Level level, BlockPos altarPos) {
         if (!(level instanceof ServerLevel serverLevel)) return;
+
         for (BlockEntity be : getSurroundingPedestals(altarPos, level)) {
             if (be instanceof PedestalTableBlockEntity pedestal) {
-                Vector3f color = new Vector3f(1.0f, 0.9f, 0.5f); // Goldener Standard-Effekt
-                DustParticleOptions dust = new DustParticleOptions(color, 1.0f);
-                serverLevel.sendParticles(dust, pedestal.getBlockPos().getX() + 0.5, pedestal.getBlockPos().getY() + 1.2, pedestal.getBlockPos().getZ() + 0.5, 5, 0.1, 0.1, 0.1, 0.05);
+                BlockPos pPos = pedestal.getBlockPos();
+                serverLevel.sendParticles(GOLD_DUST,
+                        pPos.getX() + 0.5, pPos.getY() + 1.2, pPos.getZ() + 0.5,
+                        7, 0.15, 0.15, 0.15, 0.05);
+                serverLevel.sendParticles(ParticleTypes.ENCHANT,
+                        pPos.getX() + 0.5, pPos.getY() + 1.2, pPos.getZ() + 0.5,
+                        3, 0.1, 0.1, 0.1, 0.1);
             }
         }
     }
 
     public static void spawnRitualCompletionParticles(Level level, BlockPos pos) {
         if (!(level instanceof ServerLevel serverLevel)) return;
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5 + (random.nextDouble() - 0.5), pos.getY() + 1.0 + random.nextDouble(), pos.getZ() + 0.5 + (random.nextDouble() - 0.5), 1, 0, 0, 0, 0);
-        }
-        DustParticleOptions dust = new DustParticleOptions(new Vector3f(1.0f, 0.9f, 0.2f), 1.0f);
-        for (int i = 0; i < 30; i++) {
-            serverLevel.sendParticles(dust, pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.6, pos.getY() + 1.0 + random.nextDouble(), pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.6, 1, 0, 0, 0, 0);
-        }
+        serverLevel.sendParticles(ParticleTypes.FLASH,
+                pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5,
+                1, 0, 0, 0, 0);
+        serverLevel.sendParticles(GOLD_DUST,
+                pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5,
+                50, 0.5, 1.0, 0.5, 0.1);
     }
 
     public static void spawnAngelRitualStartEffect(ServerLevel level, BlockPos pos) {
@@ -109,7 +112,7 @@ public class AngelRitualHelper {
     public static void clearItemsFromPedestals(Level level, BlockPos pos) {
         for (BlockEntity pedestal : getSurroundingPedestals(pos, level)) {
             if (pedestal instanceof PedestalTableBlockEntity p) {
-                p.setHeldItem(ItemStack.EMPTY);
+                p.clearContents();
                 level.sendBlockUpdated(p.getBlockPos(), p.getBlockState(), p.getBlockState(), Block.UPDATE_CLIENTS);
             }
         }
