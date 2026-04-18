@@ -1,15 +1,10 @@
 package net.pixeldream.heavensfall;
 
-import mod.azure.azurelib.rewrite.render.armor.AzArmorRendererRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import mod.azure.azurelib.common.render.armor.AzArmorRendererRegistry;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.pixeldream.heavensfall.blocks.blockentity.*;
 import net.pixeldream.heavensfall.client.*;

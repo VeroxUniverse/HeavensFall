@@ -1,9 +1,10 @@
 package net.pixeldream.heavensfall.client;
 
-import mod.azure.azurelib.common.api.client.helper.ClientUtils;
-import mod.azure.azurelib.rewrite.animation.controller.AzAnimationController;
-import mod.azure.azurelib.rewrite.animation.controller.AzAnimationControllerContainer;
-import mod.azure.azurelib.rewrite.animation.impl.AzItemAnimator;
+
+import mod.azure.azurelib.common.animation.controller.AzAnimationController;
+import mod.azure.azurelib.common.animation.controller.AzAnimationControllerContainer;
+import mod.azure.azurelib.common.animation.impl.AzItemAnimator;
+import mod.azure.azurelib.common.util.client.ClientUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;

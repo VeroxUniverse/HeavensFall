@@ -10,12 +10,10 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.HFBlocks;
-import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualRecipe;
 import oshi.util.tuples.Pair;
 
@@ -39,7 +37,6 @@ public class DemonRitualRecipeCategory implements IRecipeCategory<DemonRitualRec
     );
 
     private static final Pair<Integer, Integer> CENTER_COORDINATES = new Pair<>(80, 41);
-
     private static final Pair<Integer, Integer> OUTPUT_COORDINATES = new Pair<>(80, 116);
 
     public DemonRitualRecipeCategory(IGuiHelper helper) {
@@ -71,23 +68,18 @@ public class DemonRitualRecipeCategory implements IRecipeCategory<DemonRitualRec
     public void setRecipe(IRecipeLayoutBuilder builder, DemonRitualRecipe recipe, IFocusGroup focusGroup) {
         List<Ingredient> ingredients = recipe.getIngredients();
 
-        int ingredientsToShow = Math.min(ingredients.size(), INPUT_COORDINATES.size());
-
-        for (int i = 0; i < ingredientsToShow; i++) {
-            Pair<Integer, Integer> coordinates = INPUT_COORDINATES.get(i);
-            builder.addSlot(RecipeIngredientRole.INPUT, coordinates.getA(), coordinates.getB())
-                    .addIngredients(ingredients.get(i));
+        for (int i = 0; i < INPUT_COORDINATES.size(); i++) {
+            if (i < ingredients.size()) {
+                Pair<Integer, Integer> coords = INPUT_COORDINATES.get(i);
+                builder.addSlot(RecipeIngredientRole.INPUT, coords.getA(), coords.getB())
+                        .addIngredients(ingredients.get(i));
+            }
         }
 
         builder.addSlot(RecipeIngredientRole.INPUT, CENTER_COORDINATES.getA(), CENTER_COORDINATES.getB())
                 .addIngredients(Ingredient.of(new ItemStack(recipe.getCentralItem())));
 
-        Item resultItem = DemonRitualHelper.getDemonRitualRecipes().get(recipe);
-        if (resultItem != null) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_COORDINATES.getA(), OUTPUT_COORDINATES.getB())
-                    .addItemStack(new ItemStack(resultItem));
-        } else {
-            HeavensFallMod.LOGGER.warn("No result found for ritual recipe: {}", recipe);
-        }
+        builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_COORDINATES.getA(), OUTPUT_COORDINATES.getB())
+                .addItemStack(recipe.getResultStack());
     }
 }

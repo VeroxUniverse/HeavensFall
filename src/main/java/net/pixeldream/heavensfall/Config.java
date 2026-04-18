@@ -12,10 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
-// --- Config maybe for Mobs --- VeroxUniverse //
-
-@EventBusSubscriber(modid = HeavensFallMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = HeavensFallMod.MODID)
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 

@@ -1,25 +1,21 @@
 package net.pixeldream.heavensfall;
 
 import com.mojang.logging.LogUtils;
-import mod.azure.azurelib.common.internal.common.AzureLib;
-import mod.azure.azurelib.rewrite.animation.cache.AzIdentityRegistry;
+import mod.azure.azurelib.AzureLib;
+import mod.azure.azurelib.common.animation.cache.AzIdentityRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.pixeldream.heavensfall.blocks.HFBlocks;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
 import net.pixeldream.heavensfall.hotkey.Hotkeys;
-import net.pixeldream.heavensfall.recipes.ritual.AngelRitualRecipeManager;
-import net.pixeldream.heavensfall.recipes.ritual.DemonRitualRecipeManager;
-import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.items.HFItems;
+import net.pixeldream.heavensfall.recipes.HFRecipes;
+import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.util.HFCapabilities;
 import org.slf4j.Logger;
 
@@ -31,17 +27,21 @@ public class HeavensFallMod {
 
     public HeavensFallMod(IEventBus modEventBus, ModContainer modContainer) {
         AzureLib.initialize();
+
         HFItems.registerBlocks(modEventBus);
         HFItems.registerArmory(modEventBus);
         HFItems.registerResources(modEventBus);
         HFBlocks.register(modEventBus);
         HFBlockEntities.register(modEventBus);
         HFCreativeTab.register(modEventBus);
-        NeoForge.EVENT_BUS.addListener(this::onAddReloadListeners);
+
+        HFRecipes.SERIALIZERS.register(modEventBus);
+        HFRecipes.TYPES.register(modEventBus);
+
         modEventBus.addListener(HFCapabilities::registerCapabilities);
-//      NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);
+
     }
 
     @SubscribeEvent
@@ -72,10 +72,4 @@ public class HeavensFallMod {
                 HFItems.CRIMSON_BOOTS.get()
         );
     }
-
-    private void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new DemonRitualRecipeManager());
-        event.addListener(new AngelRitualRecipeManager());
-    }
-
 }

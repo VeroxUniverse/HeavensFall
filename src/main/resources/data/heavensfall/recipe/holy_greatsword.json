@@ -1,4 +1,5 @@
 {
+  "type": "heavensfall:angel_ritual",
   "central_item": "minecraft:iron_sword",
   "input_items": [
     "minecraft:blaze_rod",
@@ -6,5 +7,8 @@
     "minecraft:diamond",
     "minecraft:gold_block"
   ],
-  "result": "heavensfall:holy_greatsword"
+  "result": {
+    "id": "heavensfall:holy_greatsword",
+    "count": 1
+  }
 }

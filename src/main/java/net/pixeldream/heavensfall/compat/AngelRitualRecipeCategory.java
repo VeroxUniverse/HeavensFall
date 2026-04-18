@@ -10,13 +10,11 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.HFBlocks;
-import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
-import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
+import net.pixeldream.heavensfall.recipes.HFRecipes;
 import net.pixeldream.heavensfall.recipes.ritual.AngelRitualRecipe;
 import oshi.util.tuples.Pair;
 
@@ -26,7 +24,7 @@ public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRec
     public static final ResourceLocation UUID = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "ritual_angel");
     public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(HeavensFallMod.MODID, "textures/gui/ritual_recipe_gui_2.png");
 
-        public static final RecipeType<AngelRitualRecipe> ANGEL_RITUAL_RECIPE_RECIPE_TYPE =
+    public static final RecipeType<AngelRitualRecipe> ANGEL_RITUAL_RECIPE_TYPE =
             new RecipeType<>(UUID, AngelRitualRecipe.class);
 
     private final IDrawable background;
@@ -40,7 +38,6 @@ public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRec
     );
 
     private static final Pair<Integer, Integer> CENTER_COORDINATES = new Pair<>(80, 41);
-
     private static final Pair<Integer, Integer> OUTPUT_COORDINATES = new Pair<>(80, 116);
 
     public AngelRitualRecipeCategory(IGuiHelper helper) {
@@ -50,7 +47,7 @@ public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRec
 
     @Override
     public RecipeType<AngelRitualRecipe> getRecipeType() {
-        return ANGEL_RITUAL_RECIPE_RECIPE_TYPE;
+        return ANGEL_RITUAL_RECIPE_TYPE;
     }
 
     @Override
@@ -72,23 +69,18 @@ public class AngelRitualRecipeCategory implements IRecipeCategory<AngelRitualRec
     public void setRecipe(IRecipeLayoutBuilder builder, AngelRitualRecipe recipe, IFocusGroup focusGroup) {
         List<Ingredient> ingredients = recipe.getIngredients();
 
-        int ingredientsToShow = Math.min(ingredients.size(), INPUT_COORDINATES.size());
-
-        for (int i = 0; i < ingredientsToShow; i++) {
-            Pair<Integer, Integer> coordinates = INPUT_COORDINATES.get(i);
-            builder.addSlot(RecipeIngredientRole.INPUT, coordinates.getA(), coordinates.getB())
-                    .addIngredients(ingredients.get(i));
+        for (int i = 0; i < INPUT_COORDINATES.size(); i++) {
+            if (i < ingredients.size()) {
+                Pair<Integer, Integer> coords = INPUT_COORDINATES.get(i);
+                builder.addSlot(RecipeIngredientRole.INPUT, coords.getA(), coords.getB())
+                        .addIngredients(ingredients.get(i));
+            }
         }
 
         builder.addSlot(RecipeIngredientRole.INPUT, CENTER_COORDINATES.getA(), CENTER_COORDINATES.getB())
                 .addIngredients(Ingredient.of(new ItemStack(recipe.getCentralItem())));
 
-        Item resultItem = AngelRitualHelper.getAngelRitualRecipes().get(recipe);
-        if (resultItem != null) {
-            builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_COORDINATES.getA(), OUTPUT_COORDINATES.getB())
-                    .addItemStack(new ItemStack(resultItem));
-        } else {
-            HeavensFallMod.LOGGER.warn("No result found for ritual recipe: {}", recipe);
-        }
+        builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_COORDINATES.getA(), OUTPUT_COORDINATES.getB())
+                .addItemStack(recipe.getResultStack());
     }
 }

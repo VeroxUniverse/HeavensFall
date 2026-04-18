@@ -26,6 +26,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.pixeldream.heavensfall.HeavensFallMod;
 import net.pixeldream.heavensfall.blocks.ChalkBlock;
+import net.pixeldream.heavensfall.recipes.HFRecipes;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
 import net.pixeldream.heavensfall.util.HFCapabilities;
 import org.jetbrains.annotations.Nullable;
@@ -100,7 +101,9 @@ public class AltarBlockEntity extends BlockEntity {
         ItemStack stack = inventory.getStackInSlot(0);
         if (stack.isEmpty()) return false;
 
-        return DemonRitualHelper.getAllResultItems().contains(stack.getItem());
+        return level.getRecipeManager().getAllRecipesFor(HFRecipes.DEMON_RITUAL_TYPE.get())
+                .stream()
+                .anyMatch(recipe -> recipe.value().getResultItem(level.registryAccess()).getItem() == stack.getItem());
     }
 
     public AltarBlockEntity(BlockPos pos, BlockState state) {

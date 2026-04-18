@@ -1,4 +1,5 @@
 {
+  "type": "heavensfall:angel_ritual",
   "central_item": "minecraft:diamond",
   "input_items": [
     "minecraft:gold_ingot",
@@ -6,5 +7,8 @@
     "minecraft:quartz",
     "minecraft:feather"
   ],
-  "result": "minecraft:obsidian"
+  "result": {
+    "id": "minecraft:obsidian",
+    "count": 1
+  }
 }

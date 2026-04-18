@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.pixeldream.heavensfall.blocks.RuneBlock;
+import net.pixeldream.heavensfall.recipes.HFRecipes;
 import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +94,9 @@ public class AltarPillarBlockEntity extends BlockEntity {
         ItemStack stack = inventory.getStackInSlot(0);
         if (stack.isEmpty()) return false;
 
-        return AngelRitualHelper.getAllResultItems().contains(stack.getItem());
+        return level.getRecipeManager().getAllRecipesFor(HFRecipes.ANGEL_RITUAL_TYPE.get())
+                .stream()
+                .anyMatch(recipe -> recipe.value().getResultItem(level.registryAccess()).getItem() == stack.getItem());
     }
 
     public AltarPillarBlockEntity(BlockPos pos, BlockState state) {
