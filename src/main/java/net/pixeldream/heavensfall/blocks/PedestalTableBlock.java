@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.AngelPedestalBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalTableBlock extends BaseEntityBlock {
@@ -52,13 +52,13 @@ public class PedestalTableBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new PedestalTableBlockEntity(blockPos, blockState);
+        return new AngelPedestalBlockEntity(blockPos, blockState);
     }
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if(state.getBlock() != newState.getBlock()) {
-            if(level.getBlockEntity(pos) instanceof PedestalTableBlockEntity pedestalBlockEntity) {
+            if(level.getBlockEntity(pos) instanceof AngelPedestalBlockEntity pedestalBlockEntity) {
                 pedestalBlockEntity.drops();
                 level.updateNeighbourForOutputSignal(pos, this);
             }
@@ -69,7 +69,7 @@ public class PedestalTableBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!(level.getBlockEntity(pos) instanceof PedestalTableBlockEntity pedestalBlockEntity)) {
+        if (!(level.getBlockEntity(pos) instanceof AngelPedestalBlockEntity pedestalBlockEntity)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         ItemStack pedestalStack = pedestalBlockEntity.inventory.getStackInSlot(0);
@@ -135,11 +135,11 @@ public class PedestalTableBlock extends BaseEntityBlock {
         if (type != HFBlockEntities.PEDESTAL_TABLE_ENTITY.get()) return null;
 
         return (lvl, pos, blockState, be) -> {
-            PedestalTableBlockEntity pedestal = (PedestalTableBlockEntity) be;
+            AngelPedestalBlockEntity pedestal = (AngelPedestalBlockEntity) be;
             if (lvl.isClientSide) {
                 pedestal.clientTick();
             } else {
-                PedestalTableBlockEntity.tick(lvl, pos, blockState, pedestal);
+                AngelPedestalBlockEntity.tick(lvl, pos, blockState, pedestal);
             }
         };
     }

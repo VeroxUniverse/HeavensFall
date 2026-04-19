@@ -18,19 +18,19 @@ public class HFCapabilities {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 HFBlockEntities.PEDESTAL_ENTITY.get(),
-                PedestalBlockEntity::getHopperHandler
+                DemonPedestalBlockEntity::getHopperHandler
         );
 
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 HFBlockEntities.ALTAR_ENTITY.get(),
-                AltarBlockEntity::getHopperHandler
+                DemonAltarBlockEntity::getHopperHandler
         );
 
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(),
-                PedestalTableBlockEntity::getHopperHandler
+                AngelPedestalBlockEntity::getHopperHandler
         );
 
         event.registerBlockEntity(
@@ -45,7 +45,7 @@ public class HFCapabilities {
                     }
 
                     BlockEntity lowerBE = blockEntity.getLevel().getBlockEntity(basePos);
-                    if (lowerBE instanceof AltarPillarBlockEntity altar) {
+                    if (lowerBE instanceof AngelAltarBlockEntity altar) {
                         return altar.getHopperHandler(direction);
                     }
 

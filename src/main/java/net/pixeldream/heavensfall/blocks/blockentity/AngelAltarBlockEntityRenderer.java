@@ -15,19 +15,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 
-public class AltarBlockEntityRenderer implements BlockEntityRenderer<AltarBlockEntity> {
-    public AltarBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+public class AngelAltarBlockEntityRenderer implements BlockEntityRenderer<AngelAltarBlockEntity> {
+    public AngelAltarBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(AltarBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
+    public void render(AngelAltarBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
                        MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack stack = pBlockEntity.inventory.getStackInSlot(0);
 
         pPoseStack.pushPose();
-        pPoseStack.translate(0.5f, 1.15f, 0.5f);
+        pPoseStack.translate(0.5f, 1.95f, 0.5f);
         pPoseStack.scale(0.5f, 0.5f, 0.5f);
         pPoseStack.mulPose(Axis.YP.rotationDegrees(pBlockEntity.getRenderingRotation()));
 

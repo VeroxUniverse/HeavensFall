@@ -9,6 +9,9 @@ import net.pixeldream.heavensfall.items.armors.ArlightArmorItem;
 import net.pixeldream.heavensfall.items.armors.CrimsonArmorItem;
 import net.pixeldream.heavensfall.items.armors.FallenArmorItem;
 import net.pixeldream.heavensfall.items.armors.HolyKnightArmorItem;
+import net.pixeldream.heavensfall.items.weapons.AngelSwordItem;
+import net.pixeldream.heavensfall.items.weapons.DemonSwordItem;
+import net.pixeldream.heavensfall.items.weapons.FallenSwordItem;
 
 public class HFItems {
     public static final DeferredRegister.Items ITEMS_ARMORY = DeferredRegister.createItems(HeavensFallMod.MODID);
@@ -17,8 +20,16 @@ public class HFItems {
 
     // Weapons //
 
-    public static final DeferredItem<Item> HOLY_GREATSWORD = ITEMS_ARMORY.register("holy_greatsword",
-            () -> new SwordItem(Tiers.DIAMOND, new Item.Properties().
+    public static final DeferredItem<Item> ANGEL_GREATSWORD = ITEMS_ARMORY.register("angel_greatsword",
+            () -> new AngelSwordItem(Tiers.DIAMOND, new Item.Properties().
+                    attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f)).rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> DEMONIC_GREATSWORD = ITEMS_ARMORY.register("demonic_greatsword",
+            () -> new DemonSwordItem(Tiers.DIAMOND, new Item.Properties().
+                    attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f)).rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> FALLEN_GREATSWORD = ITEMS_ARMORY.register("fallen_greatsword",
+            () -> new FallenSwordItem(Tiers.DIAMOND, new Item.Properties().
                     attributes(SwordItem.createAttributes(Tiers.DIAMOND, 1,-2.0f)).rarity(Rarity.RARE)));
 
     // Armors //

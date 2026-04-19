@@ -89,7 +89,9 @@ public class HFItemTagProvider extends ItemTagsProvider {
                 .add(HFItems.ARCLIGHT_BOOTS.get());
 
         tag(ItemTags.SWORDS)
-                .add(HFItems.HOLY_GREATSWORD.get());
+                .add(HFItems.FALLEN_GREATSWORD.get())
+                .add(HFItems.DEMONIC_GREATSWORD.get())
+                .add(HFItems.ANGEL_GREATSWORD.get());
 
         tag(ItemTags.DURABILITY_ENCHANTABLE)
                 .add(HFItems.HOLY_KNIGHT_HELMET.get())

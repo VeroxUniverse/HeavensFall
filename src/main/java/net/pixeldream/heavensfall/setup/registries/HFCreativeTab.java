@@ -14,7 +14,7 @@ public class HFCreativeTab {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_RESOURCE = CREATIVE_MODE_TABS.register("hf_tab_resource", () -> CreativeModeTab.builder()
             .title(Component.translatable(HeavensFallMod.MODID + ".itemGroup.resources"))
-            .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
+            .icon(() -> HFBlocks.CHALK_BLOCK.get().asItem().getDefaultInstance())
             .displayItems((parameters, output) -> {
 
                 HFItems.ITEMS_RESOURCES.getEntries().forEach(item -> {
@@ -25,7 +25,7 @@ public class HFCreativeTab {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HF_TAB_AMRORY = CREATIVE_MODE_TABS.register("hf_tab_armory", () -> CreativeModeTab.builder()
             .title(Component.translatable(HeavensFallMod.MODID + ".itemGroup.armory"))
-            .icon(() -> HFItems.HOLY_GREATSWORD.get().getDefaultInstance())
+            .icon(() -> HFItems.ANGEL_GREATSWORD.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
 
                 HFItems.ITEMS_ARMORY.getEntries().forEach(item -> {

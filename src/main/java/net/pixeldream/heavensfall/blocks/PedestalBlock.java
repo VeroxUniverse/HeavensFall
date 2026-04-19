@@ -21,8 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.DemonPedestalBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends BaseEntityBlock {
@@ -53,14 +52,14 @@ public class PedestalBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new PedestalBlockEntity(blockPos, blockState);
+        return new DemonPedestalBlockEntity(blockPos, blockState);
     }
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if(state.getBlock() != newState.getBlock()) {
-            if(level.getBlockEntity(pos) instanceof PedestalBlockEntity pedestalBlockEntity) {
-                pedestalBlockEntity.drops();
+            if(level.getBlockEntity(pos) instanceof DemonPedestalBlockEntity demonPedestalBlockEntity) {
+                demonPedestalBlockEntity.drops();
                 level.updateNeighbourForOutputSignal(pos, this);
             }
         }
@@ -70,17 +69,17 @@ public class PedestalBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!(level.getBlockEntity(pos) instanceof PedestalBlockEntity pedestalBlockEntity)) {
+        if (!(level.getBlockEntity(pos) instanceof DemonPedestalBlockEntity demonPedestalBlockEntity)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        if (pedestalBlockEntity.isAnimating()) {
+        if (demonPedestalBlockEntity.isAnimating()) {
             return ItemInteractionResult.FAIL;
         }
-        ItemStack pedestalStack = pedestalBlockEntity.inventory.getStackInSlot(0);
+        ItemStack pedestalStack = demonPedestalBlockEntity.inventory.getStackInSlot(0);
         ItemStack playerStack = player.getItemInHand(hand);
         if (!playerStack.isEmpty()) {
             if (pedestalStack.isEmpty()) {
-                pedestalBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
+                demonPedestalBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
                 playerStack.shrink(1);
                 level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
                 return ItemInteractionResult.SUCCESS;
@@ -89,7 +88,7 @@ public class PedestalBlock extends BaseEntityBlock {
                 return ItemInteractionResult.FAIL;
             }
             ItemStack pedestalCopy = pedestalStack.copy();
-            pedestalBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
+            demonPedestalBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
             playerStack.shrink(1);
             if (playerStack.isEmpty()) {
                 player.setItemInHand(hand, pedestalCopy);
@@ -114,7 +113,7 @@ public class PedestalBlock extends BaseEntityBlock {
                     player.drop(pedestalCopy, false);
                 }
             }
-            pedestalBlockEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
+            demonPedestalBlockEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
             level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
             return ItemInteractionResult.SUCCESS;
         }
@@ -136,11 +135,11 @@ public class PedestalBlock extends BaseEntityBlock {
         if (type != HFBlockEntities.PEDESTAL_ENTITY.get()) return null;
 
         return (lvl, pos, blockState, be) -> {
-            PedestalBlockEntity pedestal = (PedestalBlockEntity) be;
+            DemonPedestalBlockEntity pedestal = (DemonPedestalBlockEntity) be;
             if (lvl.isClientSide) {
                 pedestal.clientTick();
             } else {
-                PedestalBlockEntity.tick(lvl, pos, blockState, pedestal);
+                DemonPedestalBlockEntity.tick(lvl, pos, blockState, pedestal);
             }
         };
     }

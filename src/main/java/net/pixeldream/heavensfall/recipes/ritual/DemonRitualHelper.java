@@ -12,8 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.DemonPedestalBlockEntity;
 import net.pixeldream.heavensfall.recipes.HFRecipes;
 import org.joml.Vector3f;
 
@@ -53,7 +52,7 @@ public class DemonRitualHelper {
         List<BlockEntity> pedestals = new ArrayList<>();
         for (BlockPos pos : offsets) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof PedestalBlockEntity pedestal && !pedestal.getHeldItem().isEmpty()) {
+            if (entity instanceof DemonPedestalBlockEntity pedestal && !pedestal.getHeldItem().isEmpty()) {
                 pedestals.add(pedestal);
             }
         }
@@ -78,16 +77,6 @@ public class DemonRitualHelper {
         return candleCount >= 6 && skullCount >= 2;
     }
 
-    public static void spawnItemTrailParticles(Level level, BlockPos altarPos) {
-        if (!(level instanceof ServerLevel server)) return;
-        for (BlockEntity be : getSurroundingPedestals(altarPos, level)) {
-            if (be instanceof PedestalBlockEntity pedestal) {
-                Vec3 pos = pedestal.getCurrentRenderItemPosition(0);
-                server.sendParticles(BLACK_DUST, pos.x, pos.y + 0.05, pos.z, 1, 0.01, 0.01, 0.01, 0.001);
-            }
-        }
-    }
-
     public static void spawnExplosionDust(ServerLevel server, BlockPos center, float radius, int count) {
         double cx = center.getX() + 0.5;
         double cy = center.getY() + 1.2;
@@ -106,7 +95,7 @@ public class DemonRitualHelper {
     public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> surroundingPedestals) {
         ItemMultiSet pedestalItems = new ItemMultiSet();
         for (BlockEntity pedestal : surroundingPedestals) {
-            if (pedestal instanceof PedestalBlockEntity statue) {
+            if (pedestal instanceof DemonPedestalBlockEntity statue) {
                 pedestalItems.add(statue.getHeldItem().getItem());
             }
         }
@@ -115,10 +104,8 @@ public class DemonRitualHelper {
 
     public static void clearItemsFromPedestals(Level level, BlockPos pos) {
         for (BlockEntity pedestal : getSurroundingPedestals(pos, level)) {
-            if (pedestal instanceof PedestalBlockEntity statue) {
-                BlockState prevState = statue.getBlockState();
-                statue.setHeldItem(ItemStack.EMPTY);
-                level.sendBlockUpdated(statue.getBlockPos(), prevState, statue.getBlockState(), Block.UPDATE_CLIENTS);
+            if (pedestal instanceof DemonPedestalBlockEntity statue) {
+                statue.clearContents();
             }
         }
     }

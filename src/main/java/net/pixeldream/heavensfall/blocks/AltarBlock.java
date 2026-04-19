@@ -21,9 +21,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.pixeldream.heavensfall.blocks.blockentity.AltarBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.DemonAltarBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.DemonPedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
 import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
 import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
@@ -143,14 +143,14 @@ public class AltarBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new AltarBlockEntity(blockPos, blockState);
+        return new DemonAltarBlockEntity(blockPos, blockState);
     }
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if(state.getBlock() != newState.getBlock()) {
-            if(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity) {
-                altarBlockEntity.drops();
+            if(level.getBlockEntity(pos) instanceof DemonAltarBlockEntity demonAltarBlockEntity) {
+                demonAltarBlockEntity.drops();
                 level.updateNeighbourForOutputSignal(pos, this);
             }
         }
@@ -162,30 +162,30 @@ public class AltarBlock extends BaseEntityBlock {
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
 
-        if (!(level.getBlockEntity(pos) instanceof AltarBlockEntity altarBlockEntity)) {
+        if (!(level.getBlockEntity(pos) instanceof DemonAltarBlockEntity demonAltarBlockEntity)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (altarBlockEntity.isValidRitualRunning()) {
+        if (demonAltarBlockEntity.isValidRitualRunning()) {
             return ItemInteractionResult.FAIL;
         }
 
         boolean anyAnimating = DemonRitualHelper.getSurroundingPedestals(pos, level).stream()
-                .filter(p -> p instanceof PedestalBlockEntity)
-                .map(p -> (PedestalBlockEntity) p)
-                .anyMatch(PedestalBlockEntity::isAnimating);
+                .filter(p -> p instanceof DemonPedestalBlockEntity)
+                .map(p -> (DemonPedestalBlockEntity) p)
+                .anyMatch(DemonPedestalBlockEntity::isAnimating);
 
         if (anyAnimating) {
             return ItemInteractionResult.FAIL;
         }
 
-        ItemStack altarStack = altarBlockEntity.inventory.getStackInSlot(0);
+        ItemStack altarStack = demonAltarBlockEntity.inventory.getStackInSlot(0);
         ItemStack playerStack = player.getItemInHand(hand);
         if (!playerStack.isEmpty()) {
             if (altarStack.isEmpty()) {
-                altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
+                demonAltarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
                 playerStack.shrink(1);
-                altarBlockEntity.setItemInRecipe(DemonRitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+                demonAltarBlockEntity.setItemInRecipe(DemonRitualHelper.isValidRecipe(level, pos, demonAltarBlockEntity.inventory.getStackInSlot(0)));
                 level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
                 return ItemInteractionResult.SUCCESS;
             }
@@ -193,7 +193,7 @@ public class AltarBlock extends BaseEntityBlock {
                 return ItemInteractionResult.FAIL;
             }
             ItemStack altarCopy = altarStack.copy();
-            altarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
+            demonAltarBlockEntity.inventory.setStackInSlot(0, playerStack.copyWithCount(1));
             playerStack.shrink(1);
             if (playerStack.isEmpty()) {
                 player.setItemInHand(hand, altarCopy);
@@ -202,7 +202,7 @@ public class AltarBlock extends BaseEntityBlock {
                     player.drop(altarCopy, false);
                 }
             }
-            altarBlockEntity.setItemInRecipe(DemonRitualHelper.isValidRecipe(level, pos, altarBlockEntity.inventory.getStackInSlot(0)));
+            demonAltarBlockEntity.setItemInRecipe(DemonRitualHelper.isValidRecipe(level, pos, demonAltarBlockEntity.inventory.getStackInSlot(0)));
             level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 2f);
             return ItemInteractionResult.SUCCESS;
         }
@@ -219,7 +219,7 @@ public class AltarBlock extends BaseEntityBlock {
                     player.drop(pedestalCopy, false);
                 }
             }
-            altarBlockEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
+            demonAltarBlockEntity.inventory.setStackInSlot(0, ItemStack.EMPTY);
             level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
             return ItemInteractionResult.SUCCESS;
         }

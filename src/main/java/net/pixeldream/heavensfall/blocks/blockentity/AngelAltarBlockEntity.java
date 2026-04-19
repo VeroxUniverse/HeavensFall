@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,22 +18,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.pixeldream.heavensfall.HeavensFallMod;
-import net.pixeldream.heavensfall.blocks.ChalkBlock;
+import net.pixeldream.heavensfall.blocks.RuneBlock;
 import net.pixeldream.heavensfall.recipes.HFRecipes;
-import net.pixeldream.heavensfall.recipes.ritual.DemonRitualHelper;
-import net.pixeldream.heavensfall.util.HFCapabilities;
+import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
 import org.jetbrains.annotations.Nullable;
-import org.jline.utils.InfoCmp;
 
 import java.util.List;
 
-public class AltarBlockEntity extends BlockEntity {
+public class AngelAltarBlockEntity extends BlockEntity {
 
     public static final int RITUAL_DURATION_TICKS = 100;
 
@@ -42,7 +35,7 @@ public class AltarBlockEntity extends BlockEntity {
     private boolean isValidRitual = false;
     private int counter = 0;
     private int soundCooldown = 0;
-    private float rotation = 0f;
+    private float rotation = 0;
 
     public final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override
@@ -101,13 +94,67 @@ public class AltarBlockEntity extends BlockEntity {
         ItemStack stack = inventory.getStackInSlot(0);
         if (stack.isEmpty()) return false;
 
-        return level.getRecipeManager().getAllRecipesFor(HFRecipes.DEMON_RITUAL_TYPE.get())
+        return level.getRecipeManager().getAllRecipesFor(HFRecipes.ANGEL_RITUAL_TYPE.get())
                 .stream()
                 .anyMatch(recipe -> recipe.value().getResultItem(level.registryAccess()).getItem() == stack.getItem());
     }
 
-    public AltarBlockEntity(BlockPos pos, BlockState state) {
-        super(HFBlockEntities.ALTAR_ENTITY.get(), pos, state);
+    public AngelAltarBlockEntity(BlockPos pos, BlockState state) {
+        super(HFBlockEntities.ALTAR_PILLAR_ENTITY.get(), pos, state);
+    }
+
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (level.isClientSide()) return;
+
+        ServerLevel serverLevel = (ServerLevel) level;
+
+        if (itemInRecipe) {
+            boolean chalkValid = hasValidChalkMultiblock(level, pos);
+            boolean recipeValid = AngelRitualHelper.isValidRecipe(level, pos, inventory.getStackInSlot(0));
+            isValidRitual = chalkValid && recipeValid;
+
+            if (isValidRitual) {
+                if (counter == 0) {
+                    AngelRitualHelper.spawnAngelRitualStartEffect(serverLevel, pos);
+                }
+
+                List<BlockEntity> pedestals = AngelRitualHelper.getSurroundingPedestals(pos, level);
+                for (BlockEntity be : pedestals) {
+                    if (be instanceof AngelPedestalBlockEntity pedestal) {
+                        if (!pedestal.isAnimating()) {
+                            pedestal.startAnimation(pos);
+                        }
+                    }
+                }
+            } else {
+                counter = 0;
+                itemInRecipe = false;
+            }
+        }
+
+        if (isValidRitual) {
+            if (soundCooldown-- <= 0) {
+                level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.1f, 2.0f);
+                soundCooldown = 20;
+            }
+
+            if (counter++ >= RITUAL_DURATION_TICKS) {
+                Item result = AngelRitualHelper.getResultForRecipe(level, pos, inventory.getStackInSlot(0));
+
+                AngelRitualHelper.clearItemsFromPedestals(level, pos);
+
+                inventory.setStackInSlot(0, new ItemStack(result));
+                level.playSound(null, pos, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.BLOCKS, 1.0f, 1.0f);
+                AngelRitualHelper.spawnRitualCompletionParticles(level, pos);
+
+                this.counter = 0;
+                this.itemInRecipe = false;
+                this.isValidRitual = false;
+                this.soundCooldown = 0;
+                this.setChanged();
+                level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+            }
+        }
     }
 
     public boolean hasValidChalkMultiblock(Level level, BlockPos pos) {
@@ -116,8 +163,8 @@ public class AltarBlockEntity extends BlockEntity {
                 pos.north().east(), pos.north().west(),
                 pos.south().east(), pos.south().west()
         };
-        for (BlockPos offsetPos : offsets) {
-            if (!(level.getBlockState(offsetPos).getBlock() instanceof ChalkBlock)) {
+        for (BlockPos offset : offsets) {
+            if (!(level.getBlockState(offset).getBlock() instanceof RuneBlock)) {
                 return false;
             }
         }
@@ -161,6 +208,7 @@ public class AltarBlockEntity extends BlockEntity {
         tag.putBoolean("IsValidRitual", isValidRitual);
         tag.putInt("Counter", counter);
         tag.putInt("SoundCooldown", soundCooldown);
+        tag.putFloat("Rotation", rotation);
     }
 
     @Override
@@ -171,6 +219,7 @@ public class AltarBlockEntity extends BlockEntity {
         isValidRitual = tag.getBoolean("IsValidRitual");
         counter = tag.getInt("Counter");
         soundCooldown = tag.getInt("SoundCooldown");
+        rotation = tag.getFloat("Rotation");
     }
 
     @Nullable
@@ -182,61 +231,5 @@ public class AltarBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
-    }
-
-    public void tick(Level level, BlockPos pos, BlockState state) {
-        if (itemInRecipe && !level.isClientSide()) {
-            boolean chalkCheck = hasValidChalkMultiblock(level, pos);
-            boolean recipeCheck = DemonRitualHelper.isValidRecipe(level, pos, inventory.getStackInSlot(0));
-            isValidRitual = chalkCheck && recipeCheck;
-
-            if (isValidRitual) {
-                List<BlockEntity> pedestals = DemonRitualHelper.getSurroundingPedestals(pos, level);
-                for (BlockEntity pedestal : pedestals) {
-                    if (pedestal instanceof PedestalBlockEntity pedestalBE && !pedestalBE.isAnimating()) {
-                        pedestalBE.startAnimation(pos);
-                    }
-                }
-            }
-        }
-
-        if (isValidRitual && !level.isClientSide()) {
-            List<BlockEntity> pedestals = DemonRitualHelper.getSurroundingPedestals(pos, level);
-            DemonRitualHelper.spawnItemTrailParticles(level, pos);
-            for (BlockEntity pedestal : pedestals) {
-                if (pedestal instanceof PedestalBlockEntity pedestalBE) {
-                    pedestalBE.setAltarPos(pos);
-                    pedestalBE.clientTick();
-                }
-            }
-
-            if (soundCooldown-- <= 0) {
-                level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.1f, 2.0f);
-                soundCooldown = 20;
-            }
-
-            if (counter++ >= RITUAL_DURATION_TICKS) {
-                Item result = DemonRitualHelper.getResultForRecipe(level, pos, inventory.getStackInSlot(0));
-                inventory.setStackInSlot(0, new ItemStack(result));
-
-                for (BlockEntity pedestal : pedestals) {
-                    if (pedestal instanceof PedestalBlockEntity pedestalBE) {
-                        pedestalBE.clearContents();
-                        pedestalBE.resetAnimation();
-                    }
-                }
-
-                level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
-                if (level instanceof ServerLevel server) {
-                    DemonRitualHelper.spawnExplosionDust(server, pos, 3.0f, 120);
-                    level.playSound(null, pos, SoundEvents.WITHER_SPAWN, SoundSource.BLOCKS, 1.0f, 2.0f);
-                }
-
-                counter = 0;
-                itemInRecipe = false;
-                isValidRitual = false;
-                soundCooldown = 0;
-            }
-        }
     }
 }

@@ -28,9 +28,9 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.pixeldream.heavensfall.blocks.blockentity.AltarPillarBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.AngelAltarBlockEntity;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.AngelPedestalBlockEntity;
 import net.pixeldream.heavensfall.blocks.model.MultiblockPart;
 import net.pixeldream.heavensfall.blocks.model.MultiblockProperties;
 import net.pixeldream.heavensfall.recipes.ritual.AngelRitualHelper;
@@ -210,7 +210,7 @@ public class AltarPillarBlock extends BaseEntityBlock {
         }
 
         BlockEntity be = level.getBlockEntity(pos);
-        if (!(be instanceof AltarPillarBlockEntity altarBlockEntity)) {
+        if (!(be instanceof AngelAltarBlockEntity altarBlockEntity)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
@@ -219,9 +219,9 @@ public class AltarPillarBlock extends BaseEntityBlock {
         }
 
         boolean anyAnimating = AngelRitualHelper.getSurroundingPedestals(pos, level).stream()
-                .filter(p -> p instanceof PedestalTableBlockEntity)
-                .map(p -> (PedestalTableBlockEntity) p)
-                .anyMatch(PedestalTableBlockEntity::isAnimating);
+                .filter(p -> p instanceof AngelPedestalBlockEntity)
+                .map(p -> (AngelPedestalBlockEntity) p)
+                .anyMatch(AngelPedestalBlockEntity::isAnimating);
 
         if (anyAnimating) {
             return ItemInteractionResult.FAIL;
@@ -290,7 +290,7 @@ public class AltarPillarBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new AltarPillarBlockEntity(blockPos, blockState);
+        return new AngelAltarBlockEntity(blockPos, blockState);
     }
 
     @Override

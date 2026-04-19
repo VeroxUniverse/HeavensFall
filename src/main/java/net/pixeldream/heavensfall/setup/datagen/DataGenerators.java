@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = HeavensFallMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = HeavensFallMod.MODID)
 public class DataGenerators {
 
     @SubscribeEvent

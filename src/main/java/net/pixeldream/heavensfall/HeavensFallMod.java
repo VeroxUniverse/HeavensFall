@@ -53,6 +53,9 @@ public class HeavensFallMod {
 
         LOGGER.info("HELLO FROM COMMON SETUP");
         AzIdentityRegistry.register(
+                HFItems.FALLEN_GREATSWORD.get(),
+                HFItems.ANGEL_GREATSWORD.get(),
+                HFItems.DEMONIC_GREATSWORD.get(),
                 HFItems.HOLY_KNIGHT_HELMET.get(),
                 HFItems.HOLY_KNIGHT_CHESPLATE.get(),
                 HFItems.HOLY_KNIGHT_LEGGINGS.get(),

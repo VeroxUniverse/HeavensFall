@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.pixeldream.heavensfall.blocks.blockentity.PedestalTableBlockEntity;
+import net.pixeldream.heavensfall.blocks.blockentity.AngelPedestalBlockEntity;
 import net.pixeldream.heavensfall.recipes.HFRecipes;
 import org.joml.Vector3f;
 
@@ -68,7 +68,7 @@ public class AngelRitualHelper {
         List<BlockEntity> pedestals = new ArrayList<>();
         for (BlockPos pos : offsets) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof PedestalTableBlockEntity pedestal && !pedestal.getHeldItem().isEmpty()) {
+            if (entity instanceof AngelPedestalBlockEntity pedestal && !pedestal.getHeldItem().isEmpty()) {
                 pedestals.add(pedestal);
             }
         }
@@ -79,7 +79,7 @@ public class AngelRitualHelper {
         if (!(level instanceof ServerLevel serverLevel)) return;
 
         for (BlockEntity be : getSurroundingPedestals(altarPos, level)) {
-            if (be instanceof PedestalTableBlockEntity pedestal) {
+            if (be instanceof AngelPedestalBlockEntity pedestal) {
                 BlockPos pPos = pedestal.getBlockPos();
                 serverLevel.sendParticles(GOLD_DUST,
                         pPos.getX() + 0.5, pPos.getY() + 1.2, pPos.getZ() + 0.5,
@@ -111,7 +111,7 @@ public class AngelRitualHelper {
 
     public static void clearItemsFromPedestals(Level level, BlockPos pos) {
         for (BlockEntity pedestal : getSurroundingPedestals(pos, level)) {
-            if (pedestal instanceof PedestalTableBlockEntity p) {
+            if (pedestal instanceof AngelPedestalBlockEntity p) {
                 p.clearContents();
                 level.sendBlockUpdated(p.getBlockPos(), p.getBlockState(), p.getBlockState(), Block.UPDATE_CLIENTS);
             }
@@ -121,7 +121,7 @@ public class AngelRitualHelper {
     public static ItemMultiSet getItemsFromPedestals(List<BlockEntity> surroundingPedestals) {
         ItemMultiSet pedestalItems = new ItemMultiSet();
         for (BlockEntity pedestal : surroundingPedestals) {
-            if (pedestal instanceof PedestalTableBlockEntity statue) {
+            if (pedestal instanceof AngelPedestalBlockEntity statue) {
                 pedestalItems.add(statue.getHeldItem().getItem());
             }
         }

@@ -1,6 +1,7 @@
 package net.pixeldream.heavensfall;
 
 import mod.azure.azurelib.common.render.armor.AzArmorRendererRegistry;
+import mod.azure.azurelib.common.render.item.AzItemRendererRegistry;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -9,6 +10,9 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.pixeldream.heavensfall.blocks.blockentity.*;
 import net.pixeldream.heavensfall.client.*;
 import net.pixeldream.heavensfall.items.HFItems;
+import net.pixeldream.heavensfall.items.weapons.AngelSwordRenderer;
+import net.pixeldream.heavensfall.items.weapons.DemonSwordRenderer;
+import net.pixeldream.heavensfall.items.weapons.FallenSwordRenderer;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @EventBusSubscriber(modid = HeavensFallMod.MODID, value = Dist.CLIENT)
@@ -16,6 +20,10 @@ public class HeavensFallModClient {
 
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
+
+        AzItemRendererRegistry.register(DemonSwordRenderer::new, HFItems.DEMONIC_GREATSWORD.get());
+        AzItemRendererRegistry.register(FallenSwordRenderer::new, HFItems.FALLEN_GREATSWORD.get());
+        AzItemRendererRegistry.register(AngelSwordRenderer::new, HFItems.ANGEL_GREATSWORD.get());
 
         AzArmorRendererRegistry.register(
                 WingsItemRenderer::new,
@@ -58,10 +66,10 @@ public class HeavensFallModClient {
     }
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_ENTITY.get(), PedestalBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_ENTITY.get(), AltarBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(), PedestalTableBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_PILLAR_ENTITY.get(), AltarPillarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_ENTITY.get(), DemonPedestalBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_ENTITY.get(), DemonAltarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(), AngelPedestalBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(HFBlockEntities.ALTAR_PILLAR_ENTITY.get(), AngelAltarBlockEntityRenderer::new);
     }
 
 }

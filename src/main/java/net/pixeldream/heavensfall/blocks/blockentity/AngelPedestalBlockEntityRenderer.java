@@ -16,11 +16,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 
-public class PedestalBlockEntityRenderer implements BlockEntityRenderer<PedestalBlockEntity> {
-    public PedestalBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
+public class AngelPedestalBlockEntityRenderer implements BlockEntityRenderer<AngelPedestalBlockEntity> {
+    public AngelPedestalBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
-    public void render(PedestalBlockEntity pedestal, float partialTick, PoseStack poseStack,
+    public void render(AngelPedestalBlockEntity pedestal, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();

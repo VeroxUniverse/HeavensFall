@@ -26,9 +26,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PedestalTableBlockEntity extends BlockEntity {
+public class AngelPedestalBlockEntity extends BlockEntity {
 
-    public static final int TOTAL_ANIMATION_STEPS = AltarPillarBlockEntity.RITUAL_DURATION_TICKS;
+    public static final int TOTAL_ANIMATION_STEPS = AngelAltarBlockEntity.RITUAL_DURATION_TICKS;
 
     private BlockPos altarPos = null;
     private float animationStep = 0f;
@@ -84,11 +84,11 @@ public class PedestalTableBlockEntity extends BlockEntity {
         };
     }
 
-    public PedestalTableBlockEntity(BlockPos pos, BlockState state) {
+    public AngelPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.PEDESTAL_TABLE_ENTITY.get(), pos, state);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, PedestalTableBlockEntity pedestal) {
+    public static void tick(Level level, BlockPos pos, BlockState state, AngelPedestalBlockEntity pedestal) {
         if (!level.isClientSide) {
             if (pedestal.getHeldItem().isEmpty()) {
                 if (pedestal.triedToStartRitual) {
@@ -114,7 +114,7 @@ public class PedestalTableBlockEntity extends BlockEntity {
         );
 
         for (BlockPos pos : altars) {
-            if (level.getBlockEntity(pos) instanceof AltarPillarBlockEntity altar) {
+            if (level.getBlockEntity(pos) instanceof AngelAltarBlockEntity altar) {
                 if (AngelRitualHelper.isValidRecipe(level, pos, altar.inventory.getStackInSlot(0))) {
                     altar.setItemInRecipe(true);
                     return true;

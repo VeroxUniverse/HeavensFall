@@ -4,11 +4,25 @@
   "heavensfall.itemGroup.blocks": "Heavens Fall: Blocks",
 
 
-  "item.heavensfall.arclight_helmet": "Arclight Helmet",
-  "item.heavensfall.arclight_chestplate": "Arclight Chestplate",
-  "item.heavensfall.arclight_leggings": "Arclight Leggings",
-  "item.heavensfall.arclight_boots": "Arclight Boots",
+  "item.heavensfall.arclight_helmet": "Arclight Paladin Helmet",
+  "item.heavensfall.arclight_chestplate": "Arclight Paladin Chestplate",
+  "item.heavensfall.arclight_leggings": "Arclight Paladin Leggings",
+  "item.heavensfall.arclight_boots": "Arclight Paladin Boots",
+  "item.heavensfall.holy_knight_helmet": "Paladin Helmet",
+  "item.heavensfall.holy_knight_chestplate": "Paladin Chestplate",
+  "item.heavensfall.holy_knight_leggings": "Paladin Leggings",
+  "item.heavensfall.holy_knight_boots": "Paladin Boots",
   "item.heavensfall.angel_wings": "Angel Wings",
+
+  "item.heavensfall.fallen_helmet": "Fallen Crusader Helmet",
+  "item.heavensfall.fallen_chestplate": "Fallen Crusader Chestplate",
+  "item.heavensfall.fallen_leggings": "Fallen Crusader Leggings",
+  "item.heavensfall.fallen_boots": "Fallen Crusader Boots",
+
+  "item.heavensfall.crimson_helmet": "Crimson Demon Helmet",
+  "item.heavensfall.crimson_chestplate": "Crimson Demon Chestplate",
+  "item.heavensfall.crimson_leggings": "Crimson Demon Leggings",
+  "item.heavensfall.crimson_boots": "Crimson Demon Boots",
 
   "block.heavensfall.chalk_block": "Chalk Dust",
   "block.heavensfall.raw_chalk_block": "Chalk Block",
@@ -20,5 +34,7 @@
 
   "ui.heavensfall.ritual_recipe_jei": "Ritual Crafting",
 
-  "item.heavensfall.holy_greatsword": "Holy Greatsword"
+  "item.heavensfall.angel_greatsword": "Holy Greatsword",
+  "item.heavensfall.demonic_greatsword": "Demonic Greatsword",
+  "item.heavensfall.fallen_greatsword": "Fallen Greatsword"
 }

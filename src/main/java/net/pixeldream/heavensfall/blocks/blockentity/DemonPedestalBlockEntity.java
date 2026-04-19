@@ -3,6 +3,7 @@ package net.pixeldream.heavensfall.blocks.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -22,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PedestalBlockEntity extends BlockEntity {
+public class DemonPedestalBlockEntity extends BlockEntity {
 
-    public static final int TOTAL_ANIMATION_STEPS = AltarBlockEntity.RITUAL_DURATION_TICKS;
+    public static final int TOTAL_ANIMATION_STEPS = DemonAltarBlockEntity.RITUAL_DURATION_TICKS;
 
     private BlockPos altarPos = null;
     private float animationStep = 0f;
@@ -44,8 +45,8 @@ public class PedestalBlockEntity extends BlockEntity {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
+            triedToStartRitual = false;
             if (!level.isClientSide()) {
-                triedToStartRitual = false;
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
         }
@@ -85,15 +86,24 @@ public class PedestalBlockEntity extends BlockEntity {
         };
     }
 
-    public PedestalBlockEntity(BlockPos pos, BlockState state) {
+    public DemonPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(HFBlockEntities.PEDESTAL_ENTITY.get(), pos, state);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity pedestal) {
+    public static void tick(Level level, BlockPos pos, BlockState state, DemonPedestalBlockEntity pedestal) {
         if (!level.isClientSide) {
-            if (!pedestal.triedToStartRitual && !pedestal.isAnimating && !pedestal.isMoving && !pedestal.getHeldItem().isEmpty()) {
+            if (pedestal.getHeldItem().isEmpty()) {
+                if (pedestal.triedToStartRitual) {
+                    pedestal.triedToStartRitual = false;
+                    pedestal.setChanged();
+                }
+                return;
+            }
+
+            if (!pedestal.triedToStartRitual && !pedestal.isAnimating && !pedestal.isMoving) {
                 if (pedestal.tryStartRitual()) {
                     pedestal.triedToStartRitual = true;
+                    pedestal.setChanged();
                 }
             }
         }
@@ -106,7 +116,7 @@ public class PedestalBlockEntity extends BlockEntity {
         );
 
         for (BlockPos pos : altars) {
-            if (level.getBlockEntity(pos) instanceof AltarBlockEntity altar) {
+            if (level.getBlockEntity(pos) instanceof DemonAltarBlockEntity altar) {
                 if (DemonRitualHelper.isValidRecipe(level, pos, altar.inventory.getStackInSlot(0))) {
                     altar.setItemInRecipe(true);
                     return true;
@@ -145,6 +155,11 @@ public class PedestalBlockEntity extends BlockEntity {
             lastAnimationStep = animationStep;
             if (animationStep < TOTAL_ANIMATION_STEPS) {
                 animationStep++;
+
+                if (level.isClientSide && animationStep % 2 == 0) {
+                    Vec3 itemPos = getCurrentRenderItemPosition(0);
+                    level.addParticle(ParticleTypes.SMOKE, itemPos.x, itemPos.y, itemPos.z, 0, 0.01, 0);
+                }
             } else {
                 resetAnimation();
             }
@@ -183,7 +198,7 @@ public class PedestalBlockEntity extends BlockEntity {
             spiralY = centerY + 0.5 * (1.0 - (spiralT - 0.5) * 2);
         }
 
-        double blend = Math.min(t * 10.0, 1.0); // 0 -> 1 bei t = 0.1
+        double blend = Math.min(t * 10.0, 1.0);
 
         double x = lerp(blend, fromX, spiralX);
         double y = lerp(blend, fromY, spiralY);
@@ -230,8 +245,16 @@ public class PedestalBlockEntity extends BlockEntity {
     }
 
     public void clearContents() {
-        inventory.setStackInSlot(0, ItemStack.EMPTY);
-        triedToStartRitual = false;
+        this.inventory.setStackInSlot(0, ItemStack.EMPTY);
+        this.triedToStartRitual = false;
+        this.isAnimating = false;
+        this.isMoving = false;
+        this.altarPos = null;
+        this.animationStep = 0;
+        this.setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
     }
 
     public void drops() {
@@ -278,5 +301,4 @@ public class PedestalBlockEntity extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
     }
-
 }
