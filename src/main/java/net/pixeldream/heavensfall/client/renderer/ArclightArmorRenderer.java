@@ -1,25 +1,25 @@
-package net.pixeldream.heavensfall.client;
+package net.pixeldream.heavensfall.client.renderer;
 
 import mod.azure.azurelib.common.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.common.render.armor.AzArmorRendererConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.pixeldream.heavensfall.HeavensFallMod;
 
-public class HolyKnightArmorRenderer extends AzArmorRenderer {
+public class ArclightArmorRenderer extends AzArmorRenderer {
     private static final ResourceLocation MODEL = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "geo/armor/holy_knight_armor.geo.json"
+            "geo/armor/arclight_paladin_armor.geo.json"
     );
 
     public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "textures/armor/holy_knight_armor.png"
+            "textures/armor/arclight_paladin_armor.png"
     );
 
-    public HolyKnightArmorRenderer() {
+    public ArclightArmorRenderer() {
         super(
                 AzArmorRendererConfig.builder(MODEL, TEXTURE)
-                        .setAnimatorProvider(ArmorAnimator::new)
+                        .setAnimatorProvider(ArclightArmorAnimator::new)
                         //.setBoneProvider(new ArclightBoneProvider())
                         .build()
         );

@@ -1,0 +1,15 @@
+{
+  "type": "heavensfall:demon_ritual",
+  "required_quest": "heavensfall:demon_rank_1",
+  "central_item": "minecraft:diamond",
+  "input_items": [
+    "minecraft:coal",
+    "minecraft:coal",
+    "minecraft:coal",
+    "minecraft:coal"
+  ],
+  "result": {
+    "id": "minecraft:netherite_ingot",
+    "count": 1
+  }
+}

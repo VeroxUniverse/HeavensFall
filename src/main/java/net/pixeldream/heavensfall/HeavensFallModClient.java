@@ -8,7 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.pixeldream.heavensfall.blocks.blockentity.*;
-import net.pixeldream.heavensfall.client.*;
+import net.pixeldream.heavensfall.client.renderer.*;
 import net.pixeldream.heavensfall.items.HFItems;
 import net.pixeldream.heavensfall.items.weapons.AngelSwordRenderer;
 import net.pixeldream.heavensfall.items.weapons.DemonSwordRenderer;

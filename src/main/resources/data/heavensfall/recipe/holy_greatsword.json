@@ -1,5 +1,6 @@
 {
   "type": "heavensfall:angel_ritual",
+  "required_quest": "heavensfall:path_of_light",
   "central_item": "minecraft:iron_sword",
   "input_items": [
     "minecraft:blaze_rod",

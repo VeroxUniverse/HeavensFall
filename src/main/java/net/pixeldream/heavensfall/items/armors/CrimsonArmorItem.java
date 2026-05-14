@@ -2,7 +2,7 @@ package net.pixeldream.heavensfall.items.armors;
 
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
-import net.pixeldream.heavensfall.client.ArmorDispatcher;
+import net.pixeldream.heavensfall.client.renderer.ArmorDispatcher;
 
 public class CrimsonArmorItem extends ArmorItem {
 

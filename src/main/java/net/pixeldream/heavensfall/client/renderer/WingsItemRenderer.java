@@ -1,26 +1,25 @@
-package net.pixeldream.heavensfall.client;
+package net.pixeldream.heavensfall.client.renderer;
 
 import mod.azure.azurelib.common.render.armor.AzArmorRenderer;
 import mod.azure.azurelib.common.render.armor.AzArmorRendererConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.pixeldream.heavensfall.HeavensFallMod;
 
-public class ArclightArmorRenderer extends AzArmorRenderer {
+public class WingsItemRenderer extends AzArmorRenderer {
     private static final ResourceLocation MODEL = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "geo/armor/arclight_paladin_armor.geo.json"
+            "geo/armor/angel_wings.geo.json"
     );
 
     public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
             HeavensFallMod.MODID,
-            "textures/armor/arclight_paladin_armor.png"
+            "textures/armor/angel_wings.png"
     );
 
-    public ArclightArmorRenderer() {
+    public WingsItemRenderer() {
         super(
                 AzArmorRendererConfig.builder(MODEL, TEXTURE)
-                        .setAnimatorProvider(ArclightArmorAnimator::new)
-                        //.setBoneProvider(new ArclightBoneProvider())
+                        .setAnimatorProvider(WingsItemAnimator::new)
                         .build()
         );
     }

@@ -9,11 +9,14 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.pixeldream.heavensfall.attachment.HFAttachments;
 import net.pixeldream.heavensfall.blocks.HFBlocks;
 import net.pixeldream.heavensfall.blocks.blockentity.HFBlockEntities;
-import net.pixeldream.heavensfall.hotkey.Hotkeys;
+import net.pixeldream.heavensfall.commands.TradeCommand;
 import net.pixeldream.heavensfall.items.HFItems;
+import net.pixeldream.heavensfall.quests.QuestManager;
 import net.pixeldream.heavensfall.recipes.HFRecipes;
 import net.pixeldream.heavensfall.setup.registries.HFCreativeTab;
 import net.pixeldream.heavensfall.util.HFCapabilities;
@@ -34,6 +37,7 @@ public class HeavensFallMod {
         HFBlocks.register(modEventBus);
         HFBlockEntities.register(modEventBus);
         HFCreativeTab.register(modEventBus);
+        HFAttachments.ATTACHMENT_TYPES.register(modEventBus);
 
         HFRecipes.SERIALIZERS.register(modEventBus);
         HFRecipes.TYPES.register(modEventBus);
@@ -42,11 +46,6 @@ public class HeavensFallMod {
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);
 
-    }
-
-    @SubscribeEvent
-    public void registerBindings(RegisterKeyMappingsEvent event) {
-        event.register(Hotkeys.FLY_MAPPING.get());
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
@@ -74,5 +73,7 @@ public class HeavensFallMod {
                 HFItems.CRIMSON_LEGGINGS.get(),
                 HFItems.CRIMSON_BOOTS.get()
         );
+
+        event.enqueueWork(QuestManager::init);
     }
 }

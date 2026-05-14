@@ -1,4 +1,4 @@
-package net.pixeldream.heavensfall.client;
+package net.pixeldream.heavensfall.client.renderer;
 
 
 import mod.azure.azurelib.common.model.AzBakedModel;
